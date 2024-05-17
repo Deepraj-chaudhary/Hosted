@@ -34,6 +34,12 @@ export const PRODUCT = `
           title
           ${META}
         }
+        moreSizes {
+          id
+          slug
+          title
+          ${META}
+        }
         ${META}
       }
     }

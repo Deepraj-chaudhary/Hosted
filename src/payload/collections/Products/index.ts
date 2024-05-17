@@ -141,6 +141,19 @@ const Products: CollectionConfig = {
         }
       },
     },
+    {
+      name: 'moreSizes',
+      type: 'relationship',
+      relationTo: 'products',
+      hasMany: true,
+      filterOptions: ({ id }) => {
+        return {
+          id: {
+            not_in: [id],
+          },
+        }
+      },
+    },
     slugField(),
     {
       name: 'skipSync',
