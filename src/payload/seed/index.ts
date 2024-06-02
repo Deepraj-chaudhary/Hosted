@@ -147,7 +147,7 @@ export const seed = async (payload: Payload): Promise<void> => {
       id: product1Doc.id,
       data: {
         relatedProducts: [product2Doc.id, product3Doc.id],
-        moreSizes: []  // New field for "more sizes"
+        moreSizes: [], // New field for "more sizes"
       },
     }),
     await payload.update({
@@ -155,7 +155,7 @@ export const seed = async (payload: Payload): Promise<void> => {
       id: product2Doc.id,
       data: {
         relatedProducts: [product1Doc.id, product3Doc.id],
-        moreSizes: []  // New field for "more sizes"
+        moreSizes: [], // New field for "more sizes"
       },
     }),
     await payload.update({
@@ -163,7 +163,7 @@ export const seed = async (payload: Payload): Promise<void> => {
       id: product3Doc.id,
       data: {
         relatedProducts: [product1Doc.id, product2Doc.id],
-        moreSizes: []  // New field for "more sizes"
+        moreSizes: [], // New field for "more sizes"
       },
     }),
   ])
