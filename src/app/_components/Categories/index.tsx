@@ -15,7 +15,7 @@ const Categories = ({ categories }: { categories: Category[] }) => {
       </div>
 
       <div className={classes.list}>
-        {categories.map(category => {
+        {categories?.map(category => {
           return <CategoryCard key={category.id} category={category} />
         })}
       </div>
