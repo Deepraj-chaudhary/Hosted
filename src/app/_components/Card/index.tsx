@@ -17,7 +17,7 @@ const priceFromJSON = (priceJSON): string => {
       const parsed = JSON.parse(priceJSON)?.data[0]
       const priceValue = parsed.unit_amount
       const priceType = parsed.type
-      price = `${parsed.currency === 'usd' ? '$' : ''}${(priceValue / 100).toFixed(2)}`
+      price = `${parsed.currency === 'inr' ? '₹' : ''}${(priceValue / 100).toFixed(2)}`
       if (priceType === 'recurring') {
         price += `/${
           parsed.recurring.interval_count > 1

@@ -21,7 +21,7 @@ export const OrderConfirmationPage: React.FC<{}> = () => {
   }, [clearCart])
 
   return (
-    <div>
+    <div> 
       {error ? (
         <Fragment>
           <Message error={error} />

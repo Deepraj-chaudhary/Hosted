@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useCallback } from 'react'
+import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { useRouter } from 'next/navigation'
 import { Order } from '../../../../payload/payload-types'
 import { Button } from '../../../_components/Button'
@@ -11,6 +12,8 @@ import { useCart } from '../../../_providers/Cart'
 import classes from './index.module.scss'
 
 export const CheckoutForm: React.FC<{}> = () => {
+  const stripe = useStripe()
+  const elements = useElements()
   const [error, setError] = React.useState<string | null>(null)
   const [isLoading, setIsLoading] = React.useState(false)
   const router = useRouter()
@@ -22,16 +25,16 @@ export const CheckoutForm: React.FC<{}> = () => {
       setIsLoading(true)
 
       try {
-        const response = {
-          error: false,
-          paymentIntent: true,
-          OrderId: "1233",
-        }
+        const { error: stripeError, paymentIntent } = await stripe?.confirmPayment({
+          elements: elements!,
+          redirect: 'if_required',
+          confirmParams: {
+            return_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/order-confirmation`,
+          },
+        })
 
-        const { error: CError = false, paymentIntent = true, OrderId } = response
-
-        if (CError) {
-        //   setError(CError.message)
+        if (stripeError) {
+          setError(stripeError.message)
           setIsLoading(false)
         }
 
@@ -49,7 +52,7 @@ export const CheckoutForm: React.FC<{}> = () => {
               },
               body: JSON.stringify({
                 total: cartTotal.raw,
-                stripePaymentIntentID: OrderId,
+                stripePaymentIntentID: paymentIntent.id,
                 items: (cart?.items || [])?.map(({ product, quantity }) => ({
                   product: typeof product === 'string' ? product : product.id,
                   quantity,
@@ -88,19 +91,20 @@ export const CheckoutForm: React.FC<{}> = () => {
         setIsLoading(false)
       }
     },
-    [ router, cart, cartTotal],
+    [stripe, elements, router, cart, cartTotal],
   )
 
   return (
     <form onSubmit={handleSubmit} className={classes.form}>
       {error && <Message error={error} />}
+      <PaymentElement />
       <div className={classes.actions}>
         <Button label="Back to cart" href="/cart" appearance="secondary" />
         <Button
           label={isLoading ? 'Loading...' : 'Checkout'}
           type="submit"
           appearance="primary"
-          disabled={ isLoading}
+          disabled={!stripe || isLoading}
         />
       </div>
     </form>

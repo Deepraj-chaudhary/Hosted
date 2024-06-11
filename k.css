@@ -1,0 +1,21 @@
+server {
+    listen 80;
+    root /root/Hosted/dist;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}cp 194.238.19.150.conf merph.in.conf
+
+server {
+    listen 80;
+    server_name merph.in www.merph.in;
+    root <project-root>;
+
+    location / {
+            try_files $uri $uri/ /index.html;
+    }
+}
+ln -s ../sites-available/merph.in.conf
+
+sudo certbot --nginx -d merph.in -d www.merph.in -d merph.in:3000 -d www.merph.in:3000

@@ -22,6 +22,7 @@
     "payload": "cross-env PAYLOAD_CONFIG_PATH=src/payload/payload.config.ts payload"
   },
   "dependencies": {
+    "@cashfreepayments/cashfree-js": "^1.0.4",
     "@payloadcms/bundler-webpack": "^1.0.0",
     "@payloadcms/db-mongodb": "^1.0.0",
     "@payloadcms/plugin-cloud": "^3.0.0",
@@ -32,6 +33,7 @@
     "@payloadcms/richtext-slate": "^1.0.0",
     "@stripe/react-stripe-js": "^1.16.3",
     "@stripe/stripe-js": "^1.46.0",
+    "cashfree-pg": "^4.1.2",
     "dotenv": "^8.2.0",
     "escape-html": "^1.0.3",
     "express": "^4.17.1",

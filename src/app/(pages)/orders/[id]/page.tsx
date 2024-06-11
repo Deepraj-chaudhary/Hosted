@@ -3,7 +3,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { Order } from '../../../../payload/payload-types'
+import type { Order } from '../../../../payload/payload-types'
 import { Button } from '../../../_components/Button'
 import { Gutter } from '../../../_components/Gutter'
 import { HR } from '../../../_components/HR'
@@ -59,7 +59,7 @@ export default async function Order({ params: { id } }) {
           {'Total: '}
           {new Intl.NumberFormat('en-US', {
             style: 'currency',
-            currency: 'usd',
+            currency: 'inr',
           }).format(order.total / 100)}
         </p>
       </div>

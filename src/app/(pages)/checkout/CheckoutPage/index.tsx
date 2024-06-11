@@ -64,6 +64,7 @@ export const CheckoutPage: React.FC<{
           } else if (res.client_secret) {
             setError(null)
             setClientSecret(res.client_secret)
+            console.log(res.client_secret); // Log clientSecret here
           }
         } catch (e) {
           setError('Something went wrong.')
@@ -139,6 +140,7 @@ export const CheckoutPage: React.FC<{
       {!clientSecret && !error && (
         <div className={classes.loading}>
           <LoadingShimmer number={2} />
+          
         </div>
       )}
       {!clientSecret && error && (
