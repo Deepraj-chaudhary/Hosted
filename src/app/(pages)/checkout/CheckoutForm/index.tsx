@@ -2,6 +2,7 @@
 
 import React, { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+
 import { Order } from '../../../../payload/payload-types'
 import { Button } from '../../../_components/Button'
 import { Message } from '../../../_components/Message'
@@ -25,13 +26,13 @@ export const CheckoutForm: React.FC<{}> = () => {
         const response = {
           error: false,
           paymentIntent: true,
-          OrderId: "1233",
+          OrderId: '1233',
         }
 
         const { error: CError = false, paymentIntent = true, OrderId } = response
 
         if (CError) {
-        //   setError(CError.message)
+          //   setError(CError.message)
           setIsLoading(false)
         }
 
@@ -88,7 +89,7 @@ export const CheckoutForm: React.FC<{}> = () => {
         setIsLoading(false)
       }
     },
-    [ router, cart, cartTotal],
+    [router, cart, cartTotal],
   )
 
   return (
@@ -100,7 +101,7 @@ export const CheckoutForm: React.FC<{}> = () => {
           label={isLoading ? 'Loading...' : 'Checkout'}
           type="submit"
           appearance="primary"
-          disabled={ isLoading}
+          disabled={isLoading}
         />
       </div>
     </form>
