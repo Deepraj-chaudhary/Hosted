@@ -25,7 +25,7 @@ export const CheckoutForm: React.FC<{}> = () => {
       try {
         const response = {
           error: false,
-          paymentIntent: true,
+          paymentIntent: true,  
           OrderId: '1233',
         }
 
