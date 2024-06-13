@@ -39,7 +39,7 @@ const Promotion = () => {
 
   return (
     <section className={classes.promotion}>
-      <div className={classes.textBox}>
+      {/* <div className={classes.textBox}>
         <h3 className={classes.title}>Deals of the Month</h3>
         <p>
           Get ready for a shopping experience like never before with our Deals of the Month! Every
@@ -53,7 +53,7 @@ const Promotion = () => {
           <StatBox label="Minutes" value={time.minutes} />
           <StatBox label="Seconds" value={time.seconds} />
         </ul>
-      </div>
+      </div> */}
     </section>
   )
 }

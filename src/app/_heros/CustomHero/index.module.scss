@@ -5,9 +5,11 @@
   overflow: hidden;
   display: flex;
   justify-content: center;
+  height: 90vh;
 
   @include small-break {
     margin: 0;
+    height: 40vh;
   }
 }
 
@@ -17,7 +19,7 @@
   max-width: 1560px;
   max-height: 884px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 
   background-size: cover;
   background-position: revert;
@@ -33,7 +35,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 15% var(--gutter-h);
+  padding: 5% var(--gutter-h);
   width: 100%;
 
   @include mid-break {
