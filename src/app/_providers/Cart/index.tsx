@@ -274,5 +274,3 @@ export const CartProvider = props => {
     </Context.Provider>
   )
 }
-
-
