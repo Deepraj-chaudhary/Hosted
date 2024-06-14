@@ -13,17 +13,22 @@
 
 .mediaWrapper {
   position: relative;
-  min-height: 400px;
   background-color: var(--color-dark-50);
+  width: 100%;
+  margin: 0 auto; // center the wrapper
+  padding-bottom: 150%; // for a 1080:720 ratio
+  margin: 0 auto;
 
   @include small-break {
-    min-height: 250px;
+    width: 100%;
+    height: calc(width * 1.5);
+    
   }
 }
 
 .image {
-  padding: 24px;
-  object-fit: contain;
+  padding: 0px;
+  object-fit: cover;
   aspect-ratio: 1/1;
   max-width: 100%;
 }

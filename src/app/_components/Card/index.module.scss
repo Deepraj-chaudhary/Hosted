@@ -73,14 +73,15 @@
   text-decoration: none;
   display: block;
   position: relative;
-  min-height: 262px;
+  height: 0;
+  padding-bottom: 150%; // for a 1080:720 ratio
   background-color: var(--color-dark-50);
+  overflow: hidden; // to contain the content within the card
 }
 
 .image {
-  padding: 24px;
-  object-fit: contain;
-  aspect-ratio: 1/1;
+  padding: 0px;
+  object-fit: cover;
   max-width: 100%;
 }
 

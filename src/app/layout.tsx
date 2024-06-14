@@ -1,6 +1,7 @@
 import React from 'react'
 import { Metadata } from 'next'
 import { Jost } from 'next/font/google'
+import Head from 'next/head'
 
 import { AdminBar } from './_components/AdminBar'
 import { Footer } from './_components/Footer'
@@ -21,6 +22,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <Head>
+          <title>Merph</title>
+        </Head>
         <InitTheme />
         <link rel="icon" href="/favicon.ico" sizes="32x32" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -40,10 +44,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'https://payloadcms.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL),
   twitter: {
     card: 'summary_large_image',
-    creator: '@payloadcms',
+    creator: 'Deepraj',
   },
-  openGraph: mergeOpenGraph(),
+  openGraph: mergeOpenGraph({
+    images: [
+      {
+        url: '/favicon.jpeg',
+        width: 800,
+        height: 600,
+        alt: 'Merph website logo',
+      },
+    ],
+  }),
 }

@@ -10,8 +10,8 @@
 
 .mediaWrapper {
   position: relative;
-  min-height: 100px;
-  padding: 16px;
+  width: 70%;
+  height: 100px;
   background-color: var(--color-dark-50);
 }
 
@@ -21,7 +21,7 @@
 }
 
 .image {
-  object-fit: contain;
+  object-fit: cover;
   max-width: 100%;
   aspect-ratio: 1 / 1;
 }
