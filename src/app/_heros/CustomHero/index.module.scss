@@ -5,11 +5,11 @@
   overflow: hidden;
   display: flex;
   justify-content: center;
-  height: 90vh;
+  height: 900px;
 
   @include small-break {
     margin: 0;
-    height: 40vh;
+    height: 400px;
   }
 }
 
@@ -22,7 +22,7 @@
   align-items: flex-end;
 
   background-size: cover;
-  background-position: revert;
+  background-position: center;
   background-repeat: no-repeat;
 
   @include small-break {
