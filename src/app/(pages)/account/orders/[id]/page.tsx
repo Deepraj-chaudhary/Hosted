@@ -67,6 +67,7 @@ export default async function Order({ params: { id } }) {
           if (typeof item.product === 'object') {
             const {
               quantity,
+              size,
               product,
               product: { id, title, meta, stripeProductID },
             } = item
@@ -90,7 +91,7 @@ export default async function Order({ params: { id } }) {
                   <div className={classes.rowContent}>
                     {!stripeProductID && (
                       <p className={classes.warning}>
-                        {'This product is not yet connected to Stripe. To link this product, '}
+                        {'This product is not yet connected to Product ID. To link this product, '}
                         <Link
                           href={`${process.env.NEXT_PUBLIC_SERVER_URL}/admin/collections/products/${id}`}
                         >
@@ -105,6 +106,7 @@ export default async function Order({ params: { id } }) {
                       </Link>
                     </h6>
                     <p>{`Quantity: ${quantity}`}</p>
+                    <p>{`Size: ${size}`}</p>
                     <Price product={product} button={false} quantity={quantity} />
                   </div>
                 </div>

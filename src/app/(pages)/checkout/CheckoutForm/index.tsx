@@ -51,9 +51,10 @@ export const CheckoutForm: React.FC<{}> = () => {
               body: JSON.stringify({
                 total: cartTotal.raw,
                 stripePaymentIntentID: OrderId,
-                items: (cart?.items || [])?.map(({ product, quantity }) => ({
+                items: (cart?.items || [])?.map(({ product, quantity, size }) => ({
                   product: typeof product === 'string' ? product : product.id,
                   quantity,
+                  size,
                   price:
                     typeof product === 'object'
                       ? priceFromJSON(product.priceJSON, 1, true)

@@ -58,6 +58,16 @@
   }
 }
 
+.size {
+  text-align: center;
+  font-size: 18px;
+  
+  @include small-break {
+    text-align: start;
+    font-size: 16px;
+  }
+}
+
 .subtotal {
   display: flex;
   justify-content: flex-end;

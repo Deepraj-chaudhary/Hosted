@@ -28,13 +28,8 @@ export const PRODUCT = `
         }
         priceJSON
         enablePaywall
+        moreSizes 
         relatedProducts {
-          id
-          slug
-          title
-          ${META}
-        }
-        moreSizes {
           id
           slug
           title

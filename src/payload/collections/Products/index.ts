@@ -143,15 +143,9 @@ const Products: CollectionConfig = {
     },
     {
       name: 'moreSizes',
-      type: 'relationship',
-      relationTo: 'products',
-      hasMany: true,
-      filterOptions: ({ id }) => {
-        return {
-          id: {
-            not_in: [id],
-          },
-        }
+      type: 'text',
+      admin: {
+        position: 'sidebar',
       },
     },
     slugField(),

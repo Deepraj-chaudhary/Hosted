@@ -34,7 +34,7 @@ export default async function Product({ params: { slug } }) {
     notFound()
   }
 
-  const { relatedProducts, moreSizes } = product // Assuming `moreSizes` is a property of `product`
+  const { relatedProducts } = product // Assuming `moreSizes` is a property of `product`
 
   return (
     <>
@@ -43,22 +43,6 @@ export default async function Product({ params: { slug } }) {
       <Blocks
         disableTopPadding
         blocks={[
-          {
-            blockType: 'moreSizes', // New block for "more sizes"
-            blockName: 'More Sizes',
-            relationTo: 'products', // Assuming the relation is also to 'products'
-            introContent: [
-              {
-                type: 'h3',
-                children: [
-                  {
-                    text: 'More Sizes',
-                  },
-                ],
-              },
-            ],
-            docs: moreSizes, // Assuming `moreSizes` is a property of `product`
-          },
           {
             blockType: 'relatedProducts',
             blockName: 'Related Product',

@@ -73,6 +73,7 @@ export const CartPage: React.FC<{
                     if (typeof item.product === 'object') {
                       const {
                         quantity,
+                        size,
                         product,
                         product: { id, title, meta, stripeProductID },
                       } = item
@@ -83,10 +84,12 @@ export const CartPage: React.FC<{
 
                       return (
                         <CartItem
+                          key={`${id}-${size}`} // Add this line
                           product={product}
                           title={title}
                           metaImage={metaImage}
                           qty={quantity}
+                          size={size}
                           addItemToCart={addItemToCart}
                         />
                       )

@@ -40,9 +40,10 @@ export const priceFromJSON = (priceJSON: string, quantity: number = 1, raw?: boo
 export const Price: React.FC<{
   product: Product
   quantity?: number
+  size?: string
   button?: 'addToCart' | 'removeFromCart' | false
 }> = props => {
-  const { product, product: { priceJSON } = {}, button = 'addToCart', quantity } = props
+  const { product, product: { priceJSON } = {}, button = 'addToCart', quantity, size } = props
 
   const [price, setPrice] = useState<{
     actualPrice: string

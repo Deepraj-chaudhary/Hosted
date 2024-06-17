@@ -22,7 +22,6 @@
   @include small-break {
     width: 100%;
     height: calc(width * 1.5);
-    
   }
 }
 
@@ -62,3 +61,45 @@
 .description {
   padding: 30px 0;
 }
+
+
+  .sizeOptions {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .sizeOption {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    // transition: ease-in-out 0.2s;
+    font-weight: 500; // Slightly bold text
+  }
+
+  // .sizeOption:hover {
+  //   background-color: var(--color-gray-500);
+  // }
+
+  .sizeOption.selected {
+    background-color: var(--color-dark-500);
+    color: white;
+    border-color: var(--color-dark-500); 
+  }
+
+  .sizeOption.unselectable {
+    color: #ccc;
+    cursor: not-allowed;
+  }
+
+
+  .outOfStockMessage, .selectSizeMessage {
+    color: var(--theme-warning-700);
+    font-size: 18px;
+    margin-top: 6px;
+    font-weight: 600;
+    text-align: center;
+    border: 2px solid var(--theme-warning-700);
+    padding: 8px;
+    border-radius: 5px;
+  }

@@ -70,6 +70,10 @@ export const Orders: CollectionConfig = {
           type: 'number',
           min: 0,
         },
+        {
+          name: 'size',
+          type: 'text',
+        },
       ],
     },
   ],

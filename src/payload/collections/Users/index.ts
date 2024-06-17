@@ -118,6 +118,10 @@ const Users: CollectionConfig = {
                 step: 1,
               },
             },
+            {
+              name: 'size',
+              type: 'text',
+            },
           ],
         },
         // If you wanted to maintain a 'created on'

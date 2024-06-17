@@ -1,4 +1,6 @@
-import React, { Fragment } from 'react'
+'use client'
+
+import React, { useState } from 'react'
 
 import { Category, Product } from '../../../payload/payload-types'
 import { AddToCartButton } from '../../_components/AddToCartButton'
@@ -8,10 +10,49 @@ import { Price } from '../../_components/Price'
 
 import classes from './index.module.scss'
 
+const SizeOptions = ({ TotalSizes, AvailableSizes, selectedSize, setSelectedSize }) => {
+  return (
+    <div className={classes.sizeOptions}>
+      {TotalSizes.map((option, index) => {
+        const isAvailable = AvailableSizes.includes(option)
+        return (
+          <div
+            key={index}
+            className={`${classes.sizeOption} ${option === selectedSize ? classes.selected : ''} ${
+              !isAvailable ? classes.unselectable : ''
+            }`}
+            onClick={() => isAvailable && setSelectedSize(option)}
+          >
+            {option}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 export const ProductHero: React.FC<{
   product: Product
 }> = ({ product }) => {
-  const { title, categories, meta: { image: metaImage, description } = {} } = product
+  const { title, categories, moreSizes, meta: { image: metaImage, description } = {} } = product
+
+  const [size, setSize] = useState('null') // assuming sizes are in an array
+  const TotalSizes = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL']
+
+  // const sizeMap = {
+  //   S: 'S',
+  //   M: 'M',
+  //   L: 'L',
+  //   XL: 'XL',
+  //   XXL: 'XXL',
+  //   XXXL: 'XXXL',
+  // }
+
+  let AvailableSizes = []
+  if (moreSizes) {
+    AvailableSizes = moreSizes.split(',')
+  }
+  const anySizesAvailable = TotalSizes.some(size => AvailableSizes.includes(size))
 
   return (
     <Gutter className={classes.productHero}>
@@ -41,7 +82,7 @@ export const ProductHero: React.FC<{
               )
             })}
           </div>
-          <p className={classes.stock}> In stock</p>
+          <p className={classes.stock}>{anySizesAvailable ? 'In stock' : 'Out of stock'}</p>
         </div>
 
         <Price product={product} button={false} />
@@ -51,7 +92,26 @@ export const ProductHero: React.FC<{
           <p>{description}</p>
         </div>
 
-        <AddToCartButton product={product} className={classes.addToCartButton} />
+        {anySizesAvailable ? (
+          <>
+            <div className={classes.description}>
+              <h6>Sizes</h6>
+            </div>
+            <SizeOptions
+              TotalSizes={TotalSizes}
+              AvailableSizes={AvailableSizes}
+              selectedSize={size}
+              setSelectedSize={setSize}
+            />
+            {size !== 'null' ? (
+              <AddToCartButton product={product} className={classes.addToCartButton} size={size} />
+            ) : (
+              <p className={classes.selectSizeMessage}>Please select a size</p>
+            )}
+          </>
+        ) : (
+          <p className={classes.outOfStockMessage}>This item is currently out of stock</p>
+        )}
       </div>
     </Gutter>
   )

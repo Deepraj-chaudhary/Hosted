@@ -12,19 +12,16 @@ import classes from './index.module.scss'
 export const AddToCartButton: React.FC<{
   product: Product
   quantity?: number
+  size?: string
   className?: string
   appearance?: Props['appearance']
 }> = props => {
-  const { product, quantity = 1, className, appearance = 'primary' } = props
+  const { product, quantity = 1, className, appearance = 'primary', size } = props
 
   const { cart, addItemToCart, isProductInCart, hasInitializedCart } = useCart()
 
-  const [isInCart, setIsInCart] = useState<boolean>()
+  const [isInCart, setIsInCart] = useState<boolean>(false)
   const router = useRouter()
-
-  useEffect(() => {
-    setIsInCart(isProductInCart(product))
-  }, [isProductInCart, product, cart])
 
   return (
     <Button
@@ -47,6 +44,7 @@ export const AddToCartButton: React.FC<{
               addItemToCart({
                 product,
                 quantity,
+                size,
               })
 
               router.push('/cart')

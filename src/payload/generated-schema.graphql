@@ -1443,7 +1443,7 @@ type Product {
   paywall: [Product_Paywall!]
   categories: [Category!]
   relatedProducts(draft: Boolean): [Product!]
-  moreSizes(draft: Boolean): [Product!]
+  moreSizes: String
   slug: String
   skipSync: Boolean
   meta: Product_Meta
@@ -3935,11 +3935,13 @@ input Product_relatedProducts_operator {
 }
 
 input Product_moreSizes_operator {
-  equals: JSON
-  not_equals: JSON
-  in: [JSON]
-  not_in: [JSON]
-  all: [JSON]
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
   exists: Boolean
 }
 
@@ -4596,7 +4598,7 @@ type ProductVersion_Version {
   paywall: [ProductVersion_Version_Paywall!]
   categories: [Category!]
   relatedProducts(draft: Boolean): [Product!]
-  moreSizes(draft: Boolean): [Product!]
+  moreSizes: String
   slug: String
   skipSync: Boolean
   meta: ProductVersion_Version_Meta
@@ -4922,11 +4924,13 @@ input versionsProduct_version__relatedProducts_operator {
 }
 
 input versionsProduct_version__moreSizes_operator {
-  equals: JSON
-  not_equals: JSON
-  in: [JSON]
-  not_in: [JSON]
-  all: [JSON]
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
   exists: Boolean
 }
 
@@ -5141,6 +5145,7 @@ type User_Cart {
 type CartItems {
   product(draft: Boolean): Product
   quantity: Float
+  size: String
   id: String
 }
 
@@ -5153,6 +5158,7 @@ type Order_Items {
   product(draft: Boolean): Product
   price: Float
   quantity: Float
+  size: String
   id: String
 }
 
@@ -5177,6 +5183,7 @@ input Order_where {
   items__product: Order_items__product_operator
   items__price: Order_items__price_operator
   items__quantity: Order_items__quantity_operator
+  items__size: Order_items__size_operator
   items__id: Order_items__id_operator
   updatedAt: Order_updatedAt_operator
   createdAt: Order_createdAt_operator
@@ -5242,6 +5249,17 @@ input Order_items__quantity_operator {
   exists: Boolean
 }
 
+input Order_items__size_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
 input Order_items__id_operator {
   equals: String
   not_equals: String
@@ -5293,6 +5311,7 @@ input Order_where_and {
   items__product: Order_items__product_operator
   items__price: Order_items__price_operator
   items__quantity: Order_items__quantity_operator
+  items__size: Order_items__size_operator
   items__id: Order_items__id_operator
   updatedAt: Order_updatedAt_operator
   createdAt: Order_createdAt_operator
@@ -5308,6 +5327,7 @@ input Order_where_or {
   items__product: Order_items__product_operator
   items__price: Order_items__price_operator
   items__quantity: Order_items__quantity_operator
+  items__size: Order_items__size_operator
   items__id: Order_items__id_operator
   updatedAt: Order_updatedAt_operator
   createdAt: Order_createdAt_operator
@@ -5434,6 +5454,7 @@ type OrdersDocAccessFields_items_Fields {
   product: OrdersDocAccessFields_items_product
   price: OrdersDocAccessFields_items_price
   quantity: OrdersDocAccessFields_items_quantity
+  size: OrdersDocAccessFields_items_size
   id: OrdersDocAccessFields_items_id
 }
 
@@ -5503,6 +5524,29 @@ type OrdersDocAccessFields_items_quantity_Update {
 }
 
 type OrdersDocAccessFields_items_quantity_Delete {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_items_size {
+  create: OrdersDocAccessFields_items_size_Create
+  read: OrdersDocAccessFields_items_size_Read
+  update: OrdersDocAccessFields_items_size_Update
+  delete: OrdersDocAccessFields_items_size_Delete
+}
+
+type OrdersDocAccessFields_items_size_Create {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_items_size_Read {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_items_size_Update {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_items_size_Delete {
   permission: Boolean!
 }
 
@@ -6579,6 +6623,7 @@ input User_where {
   stripeCustomerID: User_stripeCustomerID_operator
   cart__items__product: User_cart__items__product_operator
   cart__items__quantity: User_cart__items__quantity_operator
+  cart__items__size: User_cart__items__size_operator
   cart__items__id: User_cart__items__id_operator
   skipSync: User_skipSync_operator
   updatedAt: User_updatedAt_operator
@@ -6653,6 +6698,17 @@ input User_cart__items__quantity_operator {
   exists: Boolean
 }
 
+input User_cart__items__size_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
 input User_cart__items__id_operator {
   equals: String
   not_equals: String
@@ -6720,6 +6776,7 @@ input User_where_and {
   stripeCustomerID: User_stripeCustomerID_operator
   cart__items__product: User_cart__items__product_operator
   cart__items__quantity: User_cart__items__quantity_operator
+  cart__items__size: User_cart__items__size_operator
   cart__items__id: User_cart__items__id_operator
   skipSync: User_skipSync_operator
   updatedAt: User_updatedAt_operator
@@ -6737,6 +6794,7 @@ input User_where_or {
   stripeCustomerID: User_stripeCustomerID_operator
   cart__items__product: User_cart__items__product_operator
   cart__items__quantity: User_cart__items__quantity_operator
+  cart__items__size: User_cart__items__size_operator
   cart__items__id: User_cart__items__id_operator
   skipSync: User_skipSync_operator
   updatedAt: User_updatedAt_operator
@@ -6920,6 +6978,7 @@ type UsersDocAccessFields_cart_items_Delete {
 type UsersDocAccessFields_cart_items_Fields {
   product: UsersDocAccessFields_cart_items_product
   quantity: UsersDocAccessFields_cart_items_quantity
+  size: UsersDocAccessFields_cart_items_size
   id: UsersDocAccessFields_cart_items_id
 }
 
@@ -6966,6 +7025,29 @@ type UsersDocAccessFields_cart_items_quantity_Update {
 }
 
 type UsersDocAccessFields_cart_items_quantity_Delete {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_cart_items_size {
+  create: UsersDocAccessFields_cart_items_size_Create
+  read: UsersDocAccessFields_cart_items_size_Read
+  update: UsersDocAccessFields_cart_items_size_Update
+  delete: UsersDocAccessFields_cart_items_size_Delete
+}
+
+type UsersDocAccessFields_cart_items_size_Create {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_cart_items_size_Read {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_cart_items_size_Update {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_cart_items_size_Delete {
   permission: Boolean!
 }
 
@@ -10219,6 +10301,7 @@ type OrdersFields_items_Fields {
   product: OrdersFields_items_product
   price: OrdersFields_items_price
   quantity: OrdersFields_items_quantity
+  size: OrdersFields_items_size
   id: OrdersFields_items_id
 }
 
@@ -10288,6 +10371,29 @@ type OrdersFields_items_quantity_Update {
 }
 
 type OrdersFields_items_quantity_Delete {
+  permission: Boolean!
+}
+
+type OrdersFields_items_size {
+  create: OrdersFields_items_size_Create
+  read: OrdersFields_items_size_Read
+  update: OrdersFields_items_size_Update
+  delete: OrdersFields_items_size_Delete
+}
+
+type OrdersFields_items_size_Create {
+  permission: Boolean!
+}
+
+type OrdersFields_items_size_Read {
+  permission: Boolean!
+}
+
+type OrdersFields_items_size_Update {
+  permission: Boolean!
+}
+
+type OrdersFields_items_size_Delete {
   permission: Boolean!
 }
 
@@ -11143,6 +11249,7 @@ type UsersFields_cart_items_Delete {
 type UsersFields_cart_items_Fields {
   product: UsersFields_cart_items_product
   quantity: UsersFields_cart_items_quantity
+  size: UsersFields_cart_items_size
   id: UsersFields_cart_items_id
 }
 
@@ -11189,6 +11296,29 @@ type UsersFields_cart_items_quantity_Update {
 }
 
 type UsersFields_cart_items_quantity_Delete {
+  permission: Boolean!
+}
+
+type UsersFields_cart_items_size {
+  create: UsersFields_cart_items_size_Create
+  read: UsersFields_cart_items_size_Read
+  update: UsersFields_cart_items_size_Update
+  delete: UsersFields_cart_items_size_Delete
+}
+
+type UsersFields_cart_items_size_Create {
+  permission: Boolean!
+}
+
+type UsersFields_cart_items_size_Read {
+  permission: Boolean!
+}
+
+type UsersFields_cart_items_size_Update {
+  permission: Boolean!
+}
+
+type UsersFields_cart_items_size_Delete {
   permission: Boolean!
 }
 
@@ -12591,7 +12721,7 @@ input mutationProductInput {
   paywall: JSON
   categories: [String]
   relatedProducts: [String]
-  moreSizes: [String]
+  moreSizes: String
   slug: String
   skipSync: Boolean
   meta: mutationProduct_MetaInput
@@ -12621,7 +12751,7 @@ input mutationProductUpdateInput {
   paywall: JSON
   categories: [String]
   relatedProducts: [String]
-  moreSizes: [String]
+  moreSizes: String
   slug: String
   skipSync: Boolean
   meta: mutationProductUpdate_MetaInput
@@ -12654,6 +12784,7 @@ input mutationOrder_ItemsInput {
   product: String
   price: Float
   quantity: Float
+  size: String
   id: String
 }
 
@@ -12670,6 +12801,7 @@ input mutationOrderUpdate_ItemsInput {
   product: String
   price: Float
   quantity: Float
+  size: String
   id: String
 }
 
@@ -12766,6 +12898,7 @@ input mutationUser_CartInput {
 input mutationUser_Cart_ItemsInput {
   product: String
   quantity: Float
+  size: String
   id: String
 }
 
@@ -12800,6 +12933,7 @@ input mutationUserUpdate_CartInput {
 input mutationUserUpdate_Cart_ItemsInput {
   product: String
   quantity: Float
+  size: String
   id: String
 }
 

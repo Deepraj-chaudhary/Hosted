@@ -20,6 +20,7 @@ type CartAction =
   | {
       type: 'DELETE_ITEM'
       payload: Product
+      size: string
     }
   | {
       type: 'CLEAR_CART'
@@ -41,15 +42,17 @@ export const cartReducer = (cart: CartType, action: CartAction): CartType => {
         // remove duplicates
         const productId = typeof item.product === 'string' ? item.product : item?.product?.id
 
-        const indexInAcc = acc.findIndex(({ product }) =>
-          typeof product === 'string' ? product === productId : product?.id === productId,
+        const indexInAcc = acc.findIndex(
+          ({ product, size }) =>
+            (typeof product === 'string' ? product === productId : product?.id === productId) &&
+            size === item.size,
         ) // eslint-disable-line function-paren-newline
 
         if (indexInAcc > -1) {
           acc[indexInAcc] = {
             ...acc[indexInAcc],
             // customize the merge logic here, e.g.:
-            // quantity: acc[indexInAcc].quantity + item.quantity
+            quantity: acc[indexInAcc].quantity + item.quantity,
           }
         } else {
           acc.push(item)
@@ -69,8 +72,10 @@ export const cartReducer = (cart: CartType, action: CartAction): CartType => {
       const productId =
         typeof incomingItem.product === 'string' ? incomingItem.product : incomingItem?.product?.id
 
-      const indexInCart = cart?.items?.findIndex(({ product }) =>
-        typeof product === 'string' ? product === productId : product?.id === productId,
+      const indexInCart = cart?.items?.findIndex(
+        ({ product, size }) =>
+          (typeof product === 'string' ? product === productId : product?.id === productId) &&
+          size === incomingItem.size,
       ) // eslint-disable-line function-paren-newline
 
       let withAddedItem = [...(cart?.items || [])]
@@ -83,6 +88,7 @@ export const cartReducer = (cart: CartType, action: CartAction): CartType => {
         withAddedItem[indexInCart] = {
           ...withAddedItem[indexInCart],
           quantity: (incomingItem.quantity || 0) > 0 ? incomingItem.quantity : undefined,
+          size: incomingItem.size,
         }
       }
 
@@ -93,13 +99,14 @@ export const cartReducer = (cart: CartType, action: CartAction): CartType => {
     }
 
     case 'DELETE_ITEM': {
-      const { payload: incomingProduct } = action
+      const { payload: incomingProduct, size: incomingSize } = action
       const withDeletedItem = { ...cart }
 
-      const indexInCart = cart?.items?.findIndex(({ product }) =>
-        typeof product === 'string'
-          ? product === incomingProduct.id
-          : product?.id === incomingProduct.id,
+      const indexInCart = cart?.items?.findIndex(
+        ({ product, size }) =>
+          (typeof product === 'string'
+            ? product === incomingProduct.id
+            : product?.id === incomingProduct.id) && size === incomingSize,
       ) // eslint-disable-line function-paren-newline
 
       if (typeof indexInCart === 'number' && withDeletedItem.items && indexInCart > -1)

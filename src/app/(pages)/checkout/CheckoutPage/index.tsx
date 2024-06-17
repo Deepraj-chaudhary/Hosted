@@ -109,6 +109,7 @@ export const CheckoutPage: React.FC<{
                 const {
                   quantity,
                   product,
+                  size,
                   product: { title, meta },
                 } = item
 
@@ -123,6 +124,7 @@ export const CheckoutPage: React.FC<{
                       title={title}
                       metaImage={metaImage}
                       quantity={quantity}
+                      size={size}
                       index={index}
                     />
                   </Fragment>

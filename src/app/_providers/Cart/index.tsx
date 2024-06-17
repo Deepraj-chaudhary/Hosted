@@ -17,10 +17,10 @@ import { CartItem, cartReducer } from './reducer'
 export type CartContext = {
   cart: User['cart']
   addItemToCart: (item: CartItem) => void
-  deleteItemFromCart: (product: Product) => void
+  deleteItemFromCart: (product: Product, size: string) => void
   cartIsEmpty: boolean | undefined
   clearCart: () => void
-  isProductInCart: (product: Product) => boolean
+  isProductInCart: (product: Product, size: string) => boolean
   cartTotal: {
     formatted: string
     raw: number
@@ -42,14 +42,15 @@ const flattenCart = (cart: User['cart']): User['cart'] => ({
   ...cart,
   items: cart.items
     .map(item => {
-      if (!item?.product || typeof item?.product !== 'object') {
+      if (!item?.product || typeof item?.product !== 'object' || !item?.size) {
         return null
       }
 
       return {
         ...item,
-        // flatten relationship to product
+        // flatten relationship to product and include size
         product: item?.product?.id,
+        size: item?.size,
         quantity: typeof item?.quantity === 'number' ? item?.quantity : 0,
       }
     })
@@ -84,6 +85,7 @@ export const CartProvider = props => {
   // Check local storage for a cart
   // If there is a cart, fetch the products and hydrate the cart
   useEffect(() => {
+    // console.log('Checking local storage for a cart');
     // wait for the user to be defined before initializing the cart
     if (user === undefined) return
     if (!hasInitialized.current) {
@@ -92,17 +94,22 @@ export const CartProvider = props => {
       const syncCartFromLocalStorage = async () => {
         const localCart = localStorage.getItem('cart')
 
+        if (!localCart) {
+          return
+        }
+
         const parsedCart = JSON.parse(localCart || '{}')
 
         if (parsedCart?.items && parsedCart?.items?.length > 0) {
           const initialCart = await Promise.all(
-            parsedCart.items.map(async ({ product, quantity }) => {
+            parsedCart.items.map(async ({ product, size, quantity }) => {
               const res = await fetch(
                 `${process.env.NEXT_PUBLIC_SERVER_URL}/api/products/${product}`,
               )
               const data = await res.json()
               return {
                 product: data,
+                size,
                 quantity,
               }
             }),
@@ -131,6 +138,7 @@ export const CartProvider = props => {
   // authenticate the user and if logged in, merge the user's cart with local state
   // only do this after we have initialized the cart to ensure we don't lose any items
   useEffect(() => {
+    // console.log('Checking local storage for a cart');
     if (!hasInitialized.current) return
 
     if (authStatus === 'loggedIn') {
@@ -152,6 +160,7 @@ export const CartProvider = props => {
   // every time the cart changes, determine whether to save to local storage or Payload based on authentication status
   // upon logging in, merge and sync the existing local cart to Payload
   useEffect(() => {
+    // console.log('Determining where to save the cart');
     // wait until we have attempted authentication (the user is either an object or `null`)
     if (!hasInitialized.current || user === undefined || !cart.items) return
 
@@ -185,7 +194,7 @@ export const CartProvider = props => {
 
         syncCartToPayload()
       } catch (e) {
-        console.error('Error while syncing cart to Payload.') // eslint-disable-line no-console
+        // console.error('Error while syncing cart to Payload.') // eslint-disable-line no-console
       }
     } else {
       localStorage.setItem('cart', JSON.stringify(flattenedCart))
@@ -195,16 +204,18 @@ export const CartProvider = props => {
   }, [user, cart])
 
   const isProductInCart = useCallback(
-    (incomingProduct: Product): boolean => {
+    (incomingProduct: Product, incomingSize: string): boolean => {
+      // console.log('Checking if product is in cart');
       let isInCart = false
       const { items: itemsInCart } = cart || {}
       if (Array.isArray(itemsInCart) && itemsInCart.length > 0) {
         isInCart = Boolean(
-          itemsInCart.find(({ product }) =>
-            typeof product === 'string'
-              ? product === incomingProduct.id
-              : product?.id === incomingProduct.id,
-          ), // eslint-disable-line function-paren-newline
+          itemsInCart.find(
+            ({ product, size }) =>
+              (typeof product === 'string'
+                ? product === incomingProduct.id
+                : product?.id === incomingProduct.id) && size === incomingSize,
+          ),
         )
       }
       return isInCart
@@ -212,29 +223,33 @@ export const CartProvider = props => {
     [cart],
   )
 
-  // this method can be used to add new items AND update existing ones
-  const addItemToCart = useCallback(incomingItem => {
+  const addItemToCart = useCallback((incomingItem: CartItem) => {
+    // console.log('Adding item to cart');
     dispatchCart({
       type: 'ADD_ITEM',
       payload: incomingItem,
     })
   }, [])
 
-  const deleteItemFromCart = useCallback((incomingProduct: Product) => {
+  const deleteItemFromCart = useCallback((incomingProduct: Product, incomingSize: string) => {
+    // console.log('Deleting item from cart');
     dispatchCart({
       type: 'DELETE_ITEM',
       payload: incomingProduct,
+      size: incomingSize,
     })
   }, [])
 
   const clearCart = useCallback(() => {
+    // console.log('Clearing cart');
+    // console.log('Cart before clearing:', cart);
     dispatchCart({
       type: 'CLEAR_CART',
     })
   }, [])
 
-  // calculate the new cart total whenever the cart changes
   useEffect(() => {
+    // console.log('Calculating total');
     if (!hasInitialized) return
 
     const newTotal =
