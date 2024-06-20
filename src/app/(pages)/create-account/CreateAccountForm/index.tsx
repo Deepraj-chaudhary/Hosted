@@ -37,29 +37,8 @@ const CreateAccountForm: React.FC = () => {
   const password = useRef({})
   password.current = watch('password', '')
 
-  const sendWelcomeEmail = async (email: string, name: string) => {
-    const emailData = {
-      to: email,
-      subject: 'Welcome to Our Platform!',
-      text: `Hi ${name},\n\nThank you for creating an account with us. We are excited to have you on board!\n\nBest regards,\nThe Team`,
-    }
-
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/send-email`, {
-      method: 'POST',
-      body: JSON.stringify(emailData),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-
-    if (!response.ok) {
-      console.error('Failed to send welcome email')
-    }
-  }
-
   const onSubmit = useCallback(
     async (data: FormData) => {
-      setLoading(true)
       const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, {
         method: 'POST',
         body: JSON.stringify(data),
@@ -71,20 +50,24 @@ const CreateAccountForm: React.FC = () => {
       if (!response.ok) {
         const message = response.statusText || 'There was an error creating the account.'
         setError(message)
-        setLoading(false)
         return
       }
 
+      const redirect = searchParams.get('redirect')
+
+      const timer = setTimeout(() => {
+        setLoading(true)
+      }, 1000)
+
       try {
         await login(data)
-        await sendWelcomeEmail(data.email, data.name)
-        const redirect = searchParams.get('redirect')
+        clearTimeout(timer)
         if (redirect) router.push(redirect as string)
         else router.push(`/`)
         window.location.href = '/'
       } catch (_) {
+        clearTimeout(timer)
         setError('There was an error with the credentials provided. Please try again.')
-        setLoading(false)
       }
     },
     [login, router, searchParams],

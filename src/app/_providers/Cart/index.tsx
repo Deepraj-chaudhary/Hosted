@@ -88,17 +88,17 @@ export const CartProvider = props => {
     // console.log('Checking local storage for a cart');
     // wait for the user to be defined before initializing the cart
     if (user === undefined) {
-      console.log('User is undefined')
+      // console.log('User is undefined')
       return
     }
     if (!hasInitialized.current) {
       hasInitialized.current = true
-      console.log('Cart has not been initialized yet henceinitializing')
+      // console.log('Cart has not been initialized yet henceinitializing')
       const syncCartFromLocalStorage = async () => {
         const localCart = localStorage.getItem('cart')
 
         if (!localCart) {
-          console.log('No cart found in local storage')
+          // console.log('No cart found in local storage')
           return
         }
 
@@ -118,7 +118,7 @@ export const CartProvider = props => {
               }
             }),
           )
-          console.log('Setting cart from local storage')
+          // console.log('Setting cart from local storage')
           dispatchCart({
             type: 'SET_CART',
             payload: {
@@ -126,7 +126,7 @@ export const CartProvider = props => {
             },
           })
         } else {
-          console.log('Setting empty cart')
+          // console.log('Setting empty cart')
           dispatchCart({
             type: 'SET_CART',
             payload: {
@@ -145,14 +145,15 @@ export const CartProvider = props => {
   useEffect(() => {
     // console.log('Checking local storage for a cart');
     if (!hasInitialized.current) {
-      console.log('Cart has not been initialized yet')
-      console.log('Usercart:', user?.cart)
-      return }
+      // console.log('Cart has not been initialized yet')
+      // console.log('Usercart:', user?.cart)
+      return
+    }
 
     if (authStatus === 'loggedIn') {
       // merge the user's cart with the local state upon logging in
-      console.log('Merging cart')
-      console.log('Usercart:', user?.cart)
+      // console.log('Merging cart')
+      // console.log('Usercart:', user?.cart)
       dispatchCart({
         type: 'MERGE_CART',
         payload: user?.cart,
@@ -161,8 +162,8 @@ export const CartProvider = props => {
 
     if (authStatus === 'loggedOut') {
       // clear the cart from local state after logging out
-      console.log('Clearing cart')
-      console.log('Usercart:', user?.cart)
+      // console.log('Clearing cart')
+      // console.log('Usercart:', user?.cart)
       dispatchCart({
         type: 'CLEAR_CART',
       })
@@ -206,7 +207,7 @@ export const CartProvider = props => {
 
         syncCartToPayload()
       } catch (e) {
-        // console.error('Error while syncing cart to Payload.') // eslint-disable-line no-console
+        // console.error('Error while syncing cart to Payload.') // eslint-disable-line no-// console
       }
     } else {
       localStorage.setItem('cart', JSON.stringify(flattenedCart))

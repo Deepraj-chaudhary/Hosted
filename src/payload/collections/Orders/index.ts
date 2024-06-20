@@ -6,8 +6,8 @@ import { adminsOrOrderedBy } from './access/adminsOrOrderedBy'
 import { clearUserCart } from './hooks/clearUserCart'
 import { populateOrderedBy } from './hooks/populateOrderedBy'
 import { updateUserPurchases } from './hooks/updateUserPurchases'
-import { LinkToPaymentIntent } from './ui/LinkToPaymentIntent'
 import { generateOrderPDF } from './pdfgenerator/pdfGenerator' // Import the PDF generator function
+import { LinkToPaymentIntent } from './ui/LinkToPaymentIntent'
 
 export const Orders: CollectionConfig = {
   slug: 'orders',
@@ -23,8 +23,8 @@ export const Orders: CollectionConfig = {
       // New Hook to Send Order Confirmation Email with PDF
       async ({ doc, operation, req }) => {
         if (operation === 'create') {
-          const user = doc.orderedBy;
-          if (user && user.email) {
+          const user = doc?.orderedBy
+          if (user?.email) {
             // Generate the PDF with order details
             const pdfBuffer = await generateOrderPDF(doc)
 
@@ -41,13 +41,13 @@ export const Orders: CollectionConfig = {
                   contentType: 'application/pdf',
                 },
               ],
-            };
+            }
 
             try {
               // Accessing payload instance through req object
               await req.payload.sendEmail(message)
               console.log('Order confirmation email sent successfully') // eslint-disable-line no-console
-            } catch (error) {
+            } catch (error: unknown) {
               console.error('Error sending order confirmation email:', error) // eslint-disable-line no-console
             }
           }

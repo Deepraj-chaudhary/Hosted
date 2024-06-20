@@ -155,7 +155,7 @@ const Products: CollectionConfig = {
       ],
       admin: {
         position: 'sidebar',
-      },    
+      },
     },
     slugField(),
     {

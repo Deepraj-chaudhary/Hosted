@@ -39,10 +39,7 @@ export const cartReducer = (cart: CartType, action: CartAction): CartType => {
       // console.log('Existing cart:', cart)
       // console.log('cartitem 1 product:', incomingCart?.items[0].product)
 
-      const mergedItems: CartItem[] = [
-        ...(cart?.items || []),
-        ...(incomingCart?.items || []),
-      ]
+      const mergedItems: CartItem[] = [...(cart?.items || []), ...(incomingCart?.items || [])]
 
       const uniqueItems: CartItem[] = mergedItems.reduce((acc: CartItem[], item) => {
         const duplicate = acc.find(

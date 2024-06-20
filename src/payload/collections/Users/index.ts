@@ -9,8 +9,8 @@ import { createStripeCustomer } from './hooks/createStripeCustomer'
 import { ensureFirstUserIsAdmin } from './hooks/ensureFirstUserIsAdmin'
 import { loginAfterCreate } from './hooks/loginAfterCreate'
 import { resolveDuplicatePurchases } from './hooks/resolveDuplicatePurchases'
+import { sendWelcomeEmail } from './hooks/sendwelcomeemail'
 import { CustomerSelect } from './ui/CustomerSelect'
-import { welcomeMessage } from './hooks/sendwelcomeemail'
 
 const Users: CollectionConfig = {
   slug: 'users',
@@ -31,18 +31,17 @@ const Users: CollectionConfig = {
       loginAfterCreate,
       async ({ doc, operation, req }) => {
         if (operation === 'create') {
-          const { name, email } = doc;
+          const { name, email } = doc
 
           if (email) {
-            const message = await welcomeMessage(name, email);
-
+            const message = await sendWelcomeEmail(name, email)
 
             try {
               // Use the Payload instance to send the email
               await req.payload.sendEmail(message)
-              console.log('Welcome email sent successfully'); // eslint-disable-line no-console
-            } catch (error) {
-              console.error('Error sending welcome email:', error); // eslint-disable-line no-console
+              console.log('Welcome email sent successfully') // eslint-disable-line no-console
+            } catch (error: unknown) {
+              console.error('Error sending welcome email:', error) // eslint-disable-line no-console
             }
           }
         }

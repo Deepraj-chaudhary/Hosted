@@ -25,6 +25,7 @@ export const RecoverPasswordForm: React.FC = () => {
   } = useForm<FormData>()
 
   const onSubmit = useCallback(async (data: FormData) => {
+    // console.log(data)
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/forgot-password`,
       {
@@ -50,7 +51,10 @@ export const RecoverPasswordForm: React.FC = () => {
     <Fragment>
       {!success && (
         <React.Fragment>
-          <p>Contact us on our email through your registered email address. <a href="mailto:your-email@example.com">your-email@example.com</a></p>
+          <p>
+            Contact us on our email through your registered email address.{' '}
+            <a href="mailto:your-email@example.com">your-email@example.com</a>
+          </p>
 
           {/* <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
             <Message error={error} className={classes.message} />

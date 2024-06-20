@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 
 import { Category, Product } from '../../../payload/payload-types'
 import { AddToCartButton } from '../../_components/AddToCartButton'
@@ -11,10 +11,10 @@ import { Price } from '../../_components/Price'
 import classes from './index.module.scss'
 
 const SizeOptions: React.FC<{
-  TotalSizes: string[];
-  AvailableSizes: string[];
-  selectedSize: string;
-  setSelectedSize: (size: string) => void;
+  TotalSizes: string[]
+  AvailableSizes: string[]
+  selectedSize: string
+  setSelectedSize: (size: string) => void
 }> = ({ TotalSizes, AvailableSizes, selectedSize, setSelectedSize }) => {
   return (
     <div className={classes.sizeOptions}>
@@ -42,10 +42,10 @@ export const ProductHero: React.FC<{
   const { title, categories, moreSizes, meta: { image: metaImage, description } = {} } = product
 
   const [size, setSize] = useState('null') // assuming sizes are in an array
-  const TotalSizes: string[] = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
-  let AvailableSizes: string[] = moreSizes || [];
+  const TotalSizes: string[] = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL']
+  let AvailableSizes: string[] = moreSizes || []
 
-  const anySizesAvailable = TotalSizes.some((size: string) => AvailableSizes.includes(size));
+  const anySizesAvailable = TotalSizes.some((size: string) => AvailableSizes.includes(size))
 
   return (
     <Gutter className={classes.productHero}>
