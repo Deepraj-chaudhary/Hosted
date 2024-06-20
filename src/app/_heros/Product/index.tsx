@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, Fragment } from 'react'
 
 import { Category, Product } from '../../../payload/payload-types'
 import { AddToCartButton } from '../../_components/AddToCartButton'
@@ -10,7 +10,12 @@ import { Price } from '../../_components/Price'
 
 import classes from './index.module.scss'
 
-const SizeOptions = ({ TotalSizes, AvailableSizes, selectedSize, setSelectedSize }) => {
+const SizeOptions: React.FC<{
+  TotalSizes: string[];
+  AvailableSizes: string[];
+  selectedSize: string;
+  setSelectedSize: (size: string) => void;
+}> = ({ TotalSizes, AvailableSizes, selectedSize, setSelectedSize }) => {
   return (
     <div className={classes.sizeOptions}>
       {TotalSizes.map((option, index) => {
@@ -37,22 +42,10 @@ export const ProductHero: React.FC<{
   const { title, categories, moreSizes, meta: { image: metaImage, description } = {} } = product
 
   const [size, setSize] = useState('null') // assuming sizes are in an array
-  const TotalSizes = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL']
+  const TotalSizes: string[] = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+  let AvailableSizes: string[] = moreSizes || [];
 
-  // const sizeMap = {
-  //   S: 'S',
-  //   M: 'M',
-  //   L: 'L',
-  //   XL: 'XL',
-  //   XXL: 'XXL',
-  //   XXXL: 'XXXL',
-  // }
-
-  let AvailableSizes = []
-  if (moreSizes) {
-    AvailableSizes = moreSizes.split(',')
-  }
-  const anySizesAvailable = TotalSizes.some(size => AvailableSizes.includes(size))
+  const anySizesAvailable = TotalSizes.some((size: string) => AvailableSizes.includes(size));
 
   return (
     <Gutter className={classes.productHero}>

@@ -406,7 +406,7 @@ export interface Product {
     | null;
   categories?: (string | Category)[] | null;
   relatedProducts?: (string | Product)[] | null;
-  moreSizes?: string | null;
+  moreSizes?: ('S' | 'M' | 'L' | 'XL' | 'XXL' | 'XXXL')[] | null;
   slug?: string | null;
   skipSync?: boolean | null;
   meta?: {
@@ -432,7 +432,7 @@ export interface Order {
         product: string | Product;
         price?: number | null;
         quantity?: number | null;
-        size?: string | null;
+        size: string;
         id?: string | null;
       }[]
     | null;

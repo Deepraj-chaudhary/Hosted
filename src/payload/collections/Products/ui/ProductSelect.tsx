@@ -61,7 +61,7 @@ export const ProductSelect: React.FC<TextField> = props => {
           color: 'var(--theme-elevation-400)',
         }}
       >
-        {`Select the related Stripe product or `}
+        {`Select the related product or `}
         <a
           href={`https://dashboard.stripe.com/${
             process.env.PAYLOAD_PUBLIC_STRIPE_IS_TEST_KEY ? 'test/' : ''

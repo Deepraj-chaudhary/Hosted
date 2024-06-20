@@ -67,14 +67,20 @@
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
+    flex-wrap: wrap;
   }
 
   .sizeOption {
     padding: 10px 20px;
     border: 1px solid #ccc;
     cursor: pointer;
-    // transition: ease-in-out 0.2s;
+    transition: ease-in-out 0.2s;
     font-weight: 500; // Slightly bold text
+
+    @include small-break {
+      margin-bottom: 10px;
+      padding: 1vh 1.5vh;
+    }
   }
 
   // .sizeOption:hover {

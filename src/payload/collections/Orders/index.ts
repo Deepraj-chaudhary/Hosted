@@ -7,6 +7,7 @@ import { clearUserCart } from './hooks/clearUserCart'
 import { populateOrderedBy } from './hooks/populateOrderedBy'
 import { updateUserPurchases } from './hooks/updateUserPurchases'
 import { LinkToPaymentIntent } from './ui/LinkToPaymentIntent'
+import { generateOrderPDF } from './pdfgenerator/pdfGenerator' // Import the PDF generator function
 
 export const Orders: CollectionConfig = {
   slug: 'orders',
@@ -16,7 +17,43 @@ export const Orders: CollectionConfig = {
     preview: doc => `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/orders/${doc.id}`,
   },
   hooks: {
-    afterChange: [updateUserPurchases, clearUserCart],
+    afterChange: [
+      updateUserPurchases,
+      clearUserCart,
+      // New Hook to Send Order Confirmation Email with PDF
+      async ({ doc, operation, req }) => {
+        if (operation === 'create') {
+          const user = doc.orderedBy;
+          if (user && user.email) {
+            // Generate the PDF with order details
+            const pdfBuffer = await generateOrderPDF(doc)
+
+            const message = {
+              to: user.email,
+              from: 'no-reply@yourstore.com',
+              subject: 'Order Confirmation',
+              text: `Hi ${user.name}, your order has been placed successfully.`,
+              html: `<p>Hi ${user.name},</p><p>Your order has been placed successfully. Here are the details:</p>`,
+              attachments: [
+                {
+                  filename: `order-${doc.id}.pdf`,
+                  content: pdfBuffer,
+                  contentType: 'application/pdf',
+                },
+              ],
+            };
+
+            try {
+              // Accessing payload instance through req object
+              await req.payload.sendEmail(message)
+              console.log('Order confirmation email sent successfully') // eslint-disable-line no-console
+            } catch (error) {
+              console.error('Error sending order confirmation email:', error) // eslint-disable-line no-console
+            }
+          }
+        }
+      },
+    ],
   },
   access: {
     read: adminsOrOrderedBy,
@@ -73,6 +110,7 @@ export const Orders: CollectionConfig = {
         {
           name: 'size',
           type: 'text',
+          required: true,
         },
       ],
     },

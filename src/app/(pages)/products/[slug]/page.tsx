@@ -3,7 +3,7 @@ import { Metadata } from 'next'
 import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
 
-import { Product, Product as ProductType } from '../../../../payload/payload-types'
+import { Product as ProductType } from '../../../../payload/payload-types'
 import { fetchDoc } from '../../../_api/fetchDoc'
 import { fetchDocs } from '../../../_api/fetchDocs'
 import { Blocks } from '../../../_components/Blocks'
@@ -14,6 +14,11 @@ import { generateMeta } from '../../../_utilities/generateMeta'
 // Force this page to be dynamic so that Next.js does not cache it
 // See the note in '../../../[slug]/page.tsx' about this
 export const dynamic = 'force-dynamic'
+
+type Product = ProductType & {
+  relatedProducts: ProductType[]
+  enablePaywall: boolean
+}
 
 export default async function Product({ params: { slug } }) {
   const { isEnabled: isDraftMode } = draftMode()

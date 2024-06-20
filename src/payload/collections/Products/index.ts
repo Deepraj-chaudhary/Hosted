@@ -143,10 +143,19 @@ const Products: CollectionConfig = {
     },
     {
       name: 'moreSizes',
-      type: 'text',
+      type: 'select',
+      hasMany: true,
+      options: [
+        { label: 'Small', value: 'S' },
+        { label: 'Medium', value: 'M' },
+        { label: 'Large', value: 'L' },
+        { label: 'X Large', value: 'XL' },
+        { label: 'XX Large', value: 'XXL' },
+        { label: 'XXX Large', value: 'XXXL' },
+      ],
       admin: {
         position: 'sidebar',
-      },
+      },    
     },
     slugField(),
     {

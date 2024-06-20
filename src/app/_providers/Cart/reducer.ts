@@ -34,35 +34,34 @@ export const cartReducer = (cart: CartType, action: CartAction): CartType => {
 
     case 'MERGE_CART': {
       const { payload: incomingCart } = action
+      // console.log('Incoming cart:', incomingCart)
+      // console.log('cartitem 1 product:', incomingCart?.items[0].product)
+      // console.log('Existing cart:', cart)
+      // console.log('cartitem 1 product:', incomingCart?.items[0].product)
 
-      const syncedItems: CartItem[] = [
+      const mergedItems: CartItem[] = [
         ...(cart?.items || []),
         ...(incomingCart?.items || []),
-      ].reduce((acc: CartItem[], item) => {
-        // remove duplicates
-        const productId = typeof item.product === 'string' ? item.product : item?.product?.id
+      ]
 
-        const indexInAcc = acc.findIndex(
-          ({ product, size }) =>
-            (typeof product === 'string' ? product === productId : product?.id === productId) &&
-            size === item.size,
-        ) // eslint-disable-line function-paren-newline
+      const uniqueItems: CartItem[] = mergedItems.reduce((acc: CartItem[], item) => {
+        const duplicate = acc.find(
+          accItem => accItem.size === item.size && accItem.product?.id === item.product?.id,
+        )
 
-        if (indexInAcc > -1) {
-          acc[indexInAcc] = {
-            ...acc[indexInAcc],
-            // customize the merge logic here, e.g.:
-            quantity: acc[indexInAcc].quantity + item.quantity,
-          }
-        } else {
-          acc.push(item)
+        if (!duplicate) {
+          return [...acc, item]
         }
+
         return acc
       }, [])
 
+      // console.log('Unique cart:', uniqueItems)
+      // console.log('cartitem 1 product:', incomingCart?.items[0].product)
+
       return {
         ...cart,
-        items: syncedItems,
+        items: uniqueItems,
       }
     }
 

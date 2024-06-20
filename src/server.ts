@@ -22,6 +22,21 @@ const start = async (): Promise<void> => {
     onInit: () => {
       payload.logger.info(`Admin URL: ${payload.getAdminURL()}`)
     },
+    email: {
+      transportOptions: {
+        service: 'gmail',
+        host: process.env.SMTP_HOST,
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+        port: Number(process.env.SMTP_PORT),
+        secure: Number(process.env.SMTP_PORT) === 465,
+        requireTLS: true,
+      },
+      fromName: 'Merph.in',
+      fromAddress: 'no-reply@merph.in',
+    },
   })
 
   if (process.env.PAYLOAD_SEED === 'true') {

@@ -1443,7 +1443,7 @@ type Product {
   paywall: [Product_Paywall!]
   categories: [Category!]
   relatedProducts(draft: Boolean): [Product!]
-  moreSizes: String
+  moreSizes: [Product_moreSizes!]
   slug: String
   skipSync: Boolean
   meta: Product_Meta
@@ -1455,6 +1455,15 @@ type Product {
 union Product_Layout = Cta | Content | MediaBlock | Archive
 
 union Product_Paywall = Cta | Content | MediaBlock | Archive
+
+enum Product_moreSizes {
+  S
+  M
+  L
+  XL
+  XXL
+  XXXL
+}
 
 type Product_Meta {
   title: String
@@ -3935,14 +3944,21 @@ input Product_relatedProducts_operator {
 }
 
 input Product_moreSizes_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
+  equals: Product_moreSizes_Input
+  not_equals: Product_moreSizes_Input
+  in: [Product_moreSizes_Input]
+  not_in: [Product_moreSizes_Input]
+  all: [Product_moreSizes_Input]
   exists: Boolean
+}
+
+enum Product_moreSizes_Input {
+  S
+  M
+  L
+  XL
+  XXL
+  XXXL
 }
 
 input Product_slug_operator {
@@ -4598,7 +4614,7 @@ type ProductVersion_Version {
   paywall: [ProductVersion_Version_Paywall!]
   categories: [Category!]
   relatedProducts(draft: Boolean): [Product!]
-  moreSizes: String
+  moreSizes: [ProductVersion_Version_moreSizes!]
   slug: String
   skipSync: Boolean
   meta: ProductVersion_Version_Meta
@@ -4610,6 +4626,15 @@ type ProductVersion_Version {
 union ProductVersion_Version_Layout = Cta | Content | MediaBlock | Archive
 
 union ProductVersion_Version_Paywall = Cta | Content | MediaBlock | Archive
+
+enum ProductVersion_Version_moreSizes {
+  S
+  M
+  L
+  XL
+  XXL
+  XXXL
+}
 
 type ProductVersion_Version_Meta {
   title: String
@@ -4924,14 +4949,21 @@ input versionsProduct_version__relatedProducts_operator {
 }
 
 input versionsProduct_version__moreSizes_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
+  equals: versionsProduct_version__moreSizes_Input
+  not_equals: versionsProduct_version__moreSizes_Input
+  in: [versionsProduct_version__moreSizes_Input]
+  not_in: [versionsProduct_version__moreSizes_Input]
+  all: [versionsProduct_version__moreSizes_Input]
   exists: Boolean
+}
+
+enum versionsProduct_version__moreSizes_Input {
+  S
+  M
+  L
+  XL
+  XXL
+  XXXL
 }
 
 input versionsProduct_version__slug_operator {
@@ -5257,7 +5289,6 @@ input Order_items__size_operator {
   in: [String]
   not_in: [String]
   all: [String]
-  exists: Boolean
 }
 
 input Order_items__id_operator {
@@ -12721,13 +12752,22 @@ input mutationProductInput {
   paywall: JSON
   categories: [String]
   relatedProducts: [String]
-  moreSizes: String
+  moreSizes: [Product_moreSizes_MutationInput]
   slug: String
   skipSync: Boolean
   meta: mutationProduct_MetaInput
   updatedAt: String
   createdAt: String
   _status: Product__status_MutationInput
+}
+
+enum Product_moreSizes_MutationInput {
+  S
+  M
+  L
+  XL
+  XXL
+  XXXL
 }
 
 input mutationProduct_MetaInput {
@@ -12751,13 +12791,22 @@ input mutationProductUpdateInput {
   paywall: JSON
   categories: [String]
   relatedProducts: [String]
-  moreSizes: String
+  moreSizes: [ProductUpdate_moreSizes_MutationInput]
   slug: String
   skipSync: Boolean
   meta: mutationProductUpdate_MetaInput
   updatedAt: String
   createdAt: String
   _status: ProductUpdate__status_MutationInput
+}
+
+enum ProductUpdate_moreSizes_MutationInput {
+  S
+  M
+  L
+  XL
+  XXL
+  XXXL
 }
 
 input mutationProductUpdate_MetaInput {
@@ -12784,7 +12833,7 @@ input mutationOrder_ItemsInput {
   product: String
   price: Float
   quantity: Float
-  size: String
+  size: String!
   id: String
 }
 
@@ -12801,7 +12850,7 @@ input mutationOrderUpdate_ItemsInput {
   product: String
   price: Float
   quantity: Float
-  size: String
+  size: String!
   id: String
 }
 
