@@ -53,7 +53,7 @@ export const RecoverPasswordForm: React.FC = () => {
         <React.Fragment>
           <p>
             Contact us on our email through your registered email address.{' '}
-            <a href="mailto:your-email@example.com">your-email@example.com</a>
+            <a href="mailto:merphpit@gmail.com">merphpit@gmail.com</a>
           </p>
 
           {/* <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>

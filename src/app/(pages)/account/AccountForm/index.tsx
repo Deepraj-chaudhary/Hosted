@@ -14,6 +14,7 @@ import classes from './index.module.scss'
 type FormData = {
   email: string
   name: string
+  contactnumber: string
   password: string
   passwordConfirm: string
 }
@@ -59,6 +60,7 @@ const AccountForm: React.FC = () => {
           reset({
             email: json.doc.email,
             name: json.doc.name,
+            contactnumber: json.doc.contactnumber,
             password: '',
             passwordConfirm: '',
           })
@@ -84,6 +86,7 @@ const AccountForm: React.FC = () => {
       reset({
         email: user.email,
         name: user.name,
+        contactnumber: user.contactnumber,
         password: '',
         passwordConfirm: '',
       })
@@ -104,6 +107,12 @@ const AccountForm: React.FC = () => {
             type="email"
           />
           <Input name="name" label="Name" register={register} error={errors.name} />
+          <Input
+            name="contactnumber"
+            label="Contact Number"
+            register={register}
+            error={errors.contactnumber}
+          />
 
           <p>
             {'Change your account details below, or '}

@@ -69,6 +69,10 @@ export default async function Page({ params: { slug = 'home' } }) {
             <Categories categories={categories} />
             <Promotion />
           </Gutter>
+          <Blocks
+            blocks={layout}
+            disableTopPadding={!hero || hero?.type === 'none' || hero?.type === 'customHero'}
+          />
         </section>
       ) : (
         <>

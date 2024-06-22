@@ -9,7 +9,7 @@ type Props = {
   register: UseFormRegister<FieldValues & any>
   required?: boolean
   error: any
-  type?: 'text' | 'number' | 'password' | 'email'
+  type?: 'text' | 'number' | 'password' | 'email' | 'contactnumber'
   validate?: (value: string) => boolean | string
   disabled?: boolean
 }
@@ -36,7 +36,14 @@ export const Input: React.FC<Props> = ({
         {...register(name, {
           required,
           validate,
-          ...(type === 'email'
+          ...(type === 'contactnumber'
+            ? {
+                pattern: {
+                  value: /^[0-9]{10}$/,
+                  message: 'Please enter a valid contact number',
+                },
+              }
+            : type === 'email'
             ? {
                 pattern: {
                   value: /\S+@\S+\.\S+/,

@@ -5,25 +5,30 @@
   overflow: hidden;
   display: flex;
   justify-content: center;
-  height: 900px;
+  align-items: center; /* Center content vertically */
+  height: 100vh; /* Full viewport height */
+  z-index: 1;
+  margin-left: 50px;
+  margin-right: 50px;
 
   @include small-break {
-    margin: 0;
-    height: 400px;
+    margin-left: 0;
+    margin-right: 0;
+    height: 300px;
   }
 }
 
 .heroWrapper {
   background-color: var(--color-dark-50);
   width: 100%;
-  max-width: 1560px;
-  max-height: 884px;
+  height: 100%; /* Full height of the hero */
   display: flex;
   align-items: flex-end;
-
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  position: relative;
+  z-index: 2;
 
   @include small-break {
     background-size: cover;
@@ -31,61 +36,85 @@
   }
 }
 
-.heroTextBox {
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 5% var(--gutter-h);
-  width: 100%;
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  z-index: 3;
+}
 
+.heroTextBox {
+  width: 100%;
+  max-width: 1200px; /* Max width for larger screens */
+  padding: 2rem;
+  color: white;
+  text-align: center; /* Center text */
+  
   @include mid-break {
-    padding: 10% 30px;
+    padding: 1rem;
   }
 
   @include small-break {
-    padding: 50px 30px;
+    padding: 1rem;
   }
 
   h2 {
-    font-size: 70px;
-    margin: 32px 0;
+    font-size: 2.5rem;
+    margin: 1rem 0;
 
     @include mid-break {
-      font-size: 48px;
-      margin: 24px 0;
-      white-space: wrap;
+      font-size: 2rem;
+      margin: 1rem 0;
     }
 
     @include small-break {
-      width: 70%;
-      font-size: 36px;
-      margin: 8px 0;
+      font-size: 1.5rem;
+      margin: 0.5rem 0;
     }
   }
 
   p {
-    font-size: 30px;
+    font-size: 1.25rem;
 
     @include mid-break {
-      font-size: 24px;
+      font-size: 1rem;
     }
 
     @include small-break {
-      font-size: 18px;
+      font-size: 0.875rem;
     }
   }
 }
 
 .links {
+  position: absolute;
+  bottom: 5%;
+  left: 5%;
   list-style: none;
-  margin: 0;
   padding: 0;
   display: flex;
-  padding-top: 50px;
   flex-wrap: wrap;
-  margin: calc(var(--base) * -0.5);
+  justify-content: left;
+  padding-top: 2rem;
+  z-index: 4;
 
   & > * {
-    margin: calc(var(--base) / 2);
+    margin: 0.5rem;
   }
 }

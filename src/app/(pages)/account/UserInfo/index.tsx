@@ -16,6 +16,7 @@ export const UserInfo = () => {
 
       <div className={classes.profileInfo}>
         <p className={classes.name}>{user?.name}</p>
+        <p className={classes.contact}>{user?.contactnumber}</p>
         <p className={classes.email}>{user?.email}</p>
       </div>
     </div>

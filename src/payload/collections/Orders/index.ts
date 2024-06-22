@@ -6,7 +6,8 @@ import { adminsOrOrderedBy } from './access/adminsOrOrderedBy'
 import { clearUserCart } from './hooks/clearUserCart'
 import { populateOrderedBy } from './hooks/populateOrderedBy'
 import { updateUserPurchases } from './hooks/updateUserPurchases'
-import { generateOrderPDF } from './pdfgenerator/pdfGenerator' // Import the PDF generator function
+import { generateHtmlMessage } from './mail/htmlmessage'
+import { generateOrderPDF } from './mail/pdfGenerator'
 import { LinkToPaymentIntent } from './ui/LinkToPaymentIntent'
 
 export const Orders: CollectionConfig = {
@@ -33,7 +34,7 @@ export const Orders: CollectionConfig = {
               from: 'no-reply@yourstore.com',
               subject: 'Order Confirmation',
               text: `Hi ${user.name}, your order has been placed successfully.`,
-              html: `<p>Hi ${user.name},</p><p>Your order has been placed successfully. Here are the details:</p>`,
+              html: generateHtmlMessage(doc),
               attachments: [
                 {
                   filename: `order-${doc.id}.pdf`,

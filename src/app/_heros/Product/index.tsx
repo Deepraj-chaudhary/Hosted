@@ -42,7 +42,7 @@ export const ProductHero: React.FC<{
   const { title, categories, moreSizes, meta: { image: metaImage, description } = {} } = product
 
   const [size, setSize] = useState('null') // assuming sizes are in an array
-  const TotalSizes: string[] = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL']
+  const TotalSizes: string[] = ['S', 'M', 'L', 'XL']
   let AvailableSizes: string[] = moreSizes || []
 
   const anySizesAvailable = TotalSizes.some((size: string) => AvailableSizes.includes(size))
