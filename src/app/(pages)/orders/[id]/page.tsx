@@ -13,6 +13,8 @@ import { formatDateTime } from '../../../_utilities/formatDateTime'
 import { getMeUser } from '../../../_utilities/getMeUser'
 import { mergeOpenGraph } from '../../../_utilities/mergeOpenGraph'
 
+import UpdateRefundStatusForm from '../UpdateRefundStatusForm/index'
+
 import classes from './index.module.scss'
 
 export default async function Order({ params: { id } }) {
@@ -122,6 +124,17 @@ export default async function Order({ params: { id } }) {
 
           return null
         })}
+      </div>
+      <HR />
+      <div className={classes.refundSection}>
+        {order.refund === 'refund' ? (
+          <UpdateRefundStatusForm orderId={order.id} token={token} />
+        ) : (
+          <div className={classes.refundStatus}>
+            <p>{`Refund Status: ${order.refund}`}</p>
+            {order.refundMessage && <p>{`Refund Message: ${order.refundMessage}`}</p>}
+          </div>
+        )}
       </div>
       <HR />
       <div className={classes.actions}>

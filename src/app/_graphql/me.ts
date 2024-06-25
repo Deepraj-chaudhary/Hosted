@@ -7,6 +7,8 @@ export const ME_QUERY = `query {
       email
       name
       contactnumber
+      deliveryaddress
+      pincode
       ${CART}
       roles
     }

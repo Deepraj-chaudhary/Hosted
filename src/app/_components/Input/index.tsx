@@ -9,7 +9,7 @@ type Props = {
   register: UseFormRegister<FieldValues & any>
   required?: boolean
   error: any
-  type?: 'text' | 'number' | 'password' | 'email' | 'contactnumber'
+  type?: 'text' | 'number' | 'password' | 'email' | 'contactnumber' 
   validate?: (value: string) => boolean | string
   disabled?: boolean
 }

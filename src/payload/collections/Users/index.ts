@@ -12,11 +12,52 @@ import { resolveDuplicatePurchases } from './hooks/resolveDuplicatePurchases'
 import { sendWelcomeEmail } from './hooks/sendwelcomeemail'
 import { CustomerSelect } from './ui/CustomerSelect'
 
+const stateOptions = [
+  { label: 'JAMMU AND KASHMIR', value: '1' },
+  { label: 'HIMACHAL PRADESH', value: '2' },
+  { label: 'PUNJAB', value: '3' },
+  { label: 'CHANDIGARH', value: '4' },
+  { label: 'UTTARAKHAND', value: '5' },
+  { label: 'HARYANA', value: '6' },
+  { label: 'DELHI', value: '7' },
+  { label: 'RAJASTHAN', value: '8' },
+  { label: 'UTTAR PRADESH', value: '9' },
+  { label: 'BIHAR', value: '10' },
+  { label: 'SIKKIM', value: '11' },
+  { label: 'ARUNACHAL PRADESH', value: '12' },
+  { label: 'NAGALAND', value: '13' },
+  { label: 'MANIPUR', value: '14' },
+  { label: 'MIZORAM', value: '15' },
+  { label: 'TRIPURA', value: '16' },
+  { label: 'MEGHALAYA', value: '17' },
+  { label: 'ASSAM', value: '18' },
+  { label: 'WEST BENGAL', value: '19' },
+  { label: 'JHARKHAND', value: '20' },
+  { label: 'ORISSA', value: '21' },
+  { label: 'CHHATTISGARH', value: '22' },
+  { label: 'MADHYA PRADESH', value: '23' },
+  { label: 'GUJARAT', value: '24' },
+  { label: 'DADAR AND NAGAR HAVELI & DAMAN AND DIU', value: '26' },
+  { label: 'MAHARASHTRA', value: '27' },
+  { label: 'KARNATAKA', value: '29' },
+  { label: 'GOA', value: '30' },
+  { label: 'LAKSHADWEEP', value: '31' },
+  { label: 'KERALA', value: '32' },
+  { label: 'TAMIL NADU', value: '33' },
+  { label: 'PUDUCHERRY', value: '34' },
+  { label: 'ANDAMAN AND NICOBAR', value: '35' },
+  { label: 'TELANGANA', value: '36' },
+  { label: 'ANDHRA PRADESH', value: '37' },
+  { label: 'LADAKH', value: '38' },
+  { label: 'OTHER TERRITORY', value: '97' },
+  { label: 'OTHER COUNTRY', value: '99' },
+]
+
 const Users: CollectionConfig = {
   slug: 'users',
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'contactnumber', 'email'],
+    defaultColumns: ['name', 'contactnumber', 'email', 'deliveryaddress', 'pincode', 'state'],
   },
   access: {
     read: adminsAndUser,
@@ -69,6 +110,23 @@ const Users: CollectionConfig = {
     {
       name: 'contactnumber',
       type: 'text',
+    },
+    {
+      name: 'deliveryaddress',
+      type: 'text',
+    },
+    {
+      name: 'city',
+      type: 'text',
+    },
+    {
+      name: 'state',
+      type: 'select',
+      options: stateOptions,
+    },
+    {
+      name: 'pincode',
+      type: 'number',
     },
     {
       name: 'roles',

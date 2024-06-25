@@ -2,7 +2,7 @@ import type { CartItems, Product, User } from '../../../payload/payload-types'
 
 export type CartItem = CartItems[0]
 
-type CartType = User['cart']
+type CartType = User['cart'];
 
 type CartAction =
   | {
@@ -34,9 +34,9 @@ export const cartReducer = (cart: CartType, action: CartAction): CartType => {
 
     case 'MERGE_CART': {
       const { payload: incomingCart } = action
-      // console.log('Incoming cart:', incomingCart)
+      console.log('Incoming cart:', incomingCart)
       // console.log('cartitem 1 product:', incomingCart?.items[0].product)
-      // console.log('Existing cart:', cart)
+      console.log('Existing cart:', cart)
       // console.log('cartitem 1 product:', incomingCart?.items[0].product)
 
       const mergedItems: CartItem[] = [...(cart?.items || []), ...(incomingCart?.items || [])]
@@ -46,6 +46,14 @@ export const cartReducer = (cart: CartType, action: CartAction): CartType => {
           accItem => accItem.size === item.size && accItem.product?.id === item.product?.id,
         )
 
+        if (!item.product || typeof item.product !== 'object' || !item.size) {
+          return acc;
+        }
+
+        if (!item.product.moreSizes.includes(item.size as "S" | "M" | "L" | "XL" )) {
+          return acc;
+        }
+
         if (!duplicate) {
           return [...acc, item]
         }
@@ -53,7 +61,7 @@ export const cartReducer = (cart: CartType, action: CartAction): CartType => {
         return acc
       }, [])
 
-      // console.log('Unique cart:', uniqueItems)
+      console.log('Unique cart:', uniqueItems)
       // console.log('cartitem 1 product:', incomingCart?.items[0].product)
 
       return {

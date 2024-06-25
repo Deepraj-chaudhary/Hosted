@@ -1,14 +1,14 @@
-import type { CollectionConfig } from 'payload/types'
+import type { CollectionConfig } from 'payload/types';
 
-import { admins } from '../../access/admins'
-import { adminsOrLoggedIn } from '../../access/adminsOrLoggedIn'
-import { adminsOrOrderedBy } from './access/adminsOrOrderedBy'
-import { clearUserCart } from './hooks/clearUserCart'
-import { populateOrderedBy } from './hooks/populateOrderedBy'
-import { updateUserPurchases } from './hooks/updateUserPurchases'
-import { generateHtmlMessage } from './mail/htmlmessage'
-import { generateOrderPDF } from './mail/pdfGenerator'
-import { LinkToPaymentIntent } from './ui/LinkToPaymentIntent'
+import { admins } from '../../access/admins';
+import { adminsOrLoggedIn } from '../../access/adminsOrLoggedIn';
+import { adminsOrOrderedBy } from './access/adminsOrOrderedBy';
+import { clearUserCart } from './hooks/clearUserCart';
+import { populateOrderedBy } from './hooks/populateOrderedBy';
+import { updateUserPurchases } from './hooks/updateUserPurchases';
+import { generateHtmlMessage } from './mail/htmlmessage';
+import { generateOrderPDF } from './mail/pdfGenerator';
+import { LinkToPaymentIntent } from './ui/LinkToPaymentIntent';
 
 export const Orders: CollectionConfig = {
   slug: 'orders',
@@ -24,10 +24,10 @@ export const Orders: CollectionConfig = {
       // New Hook to Send Order Confirmation Email with PDF
       async ({ doc, operation, req }) => {
         if (operation === 'create') {
-          const user = doc?.orderedBy
+          const user = doc?.orderedBy;
           if (user?.email) {
             // Generate the PDF with order details
-            const pdfBuffer = await generateOrderPDF(doc)
+            const pdfBuffer = await generateOrderPDF(doc);
 
             const message = {
               to: user.email,
@@ -42,14 +42,14 @@ export const Orders: CollectionConfig = {
                   contentType: 'application/pdf',
                 },
               ],
-            }
+            };
 
             try {
               // Accessing payload instance through req object
-              await req.payload.sendEmail(message)
-              console.log('Order confirmation email sent successfully') // eslint-disable-line no-console
+              await req.payload.sendEmail(message);
+              console.log('Order confirmation email sent successfully'); // eslint-disable-line no-console
             } catch (error: unknown) {
-              console.error('Error sending order confirmation email:', error) // eslint-disable-line no-console
+              console.error('Error sending order confirmation email:', error); // eslint-disable-line no-console
             }
           }
         }
@@ -58,7 +58,7 @@ export const Orders: CollectionConfig = {
   },
   access: {
     read: adminsOrOrderedBy,
-    update: admins,
+    update: adminsOrOrderedBy,
     create: adminsOrLoggedIn,
     delete: admins,
   },
@@ -70,10 +70,13 @@ export const Orders: CollectionConfig = {
       hooks: {
         beforeChange: [populateOrderedBy],
       },
+      access: {
+        update: admins,
+      },
     },
     {
       name: 'stripePaymentIntentID',
-      label: 'Stripe Payment Intent ID',
+      label: 'Payment Intent ID',
       type: 'text',
       admin: {
         position: 'sidebar',
@@ -81,12 +84,18 @@ export const Orders: CollectionConfig = {
           Field: LinkToPaymentIntent,
         },
       },
+      access: {
+        update: admins,
+      },
     },
     {
       name: 'total',
       type: 'number',
       required: true,
       min: 0,
+      access: {
+        update: admins,
+      },
     },
     {
       name: 'items',
@@ -114,6 +123,43 @@ export const Orders: CollectionConfig = {
           required: true,
         },
       ],
+      access: {
+        update: admins,
+      },
+    },
+    // New fields with specific access for logged-in users
+    {
+      name: 'refund',
+      type: 'select',
+      options: [
+        {
+          label: 'Refund',
+          value: 'refund',
+        },
+        {
+          label: 'Refunded',
+          value: 'Refunded',
+        },
+        {
+          label: 'Refunding',
+          value: 'Refunding',
+        },
+        {
+          label: 'Refund Failed',
+          value: 'Failed',
+        },
+      ],
+      defaultValue: 'refund',
+      admin: {
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'refundMessage',
+      type: 'text',
+      admin: {
+        position: 'sidebar',
+      },
     },
   ],
 }

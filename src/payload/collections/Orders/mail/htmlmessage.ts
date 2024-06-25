@@ -2,6 +2,47 @@ import { template } from 'lodash'
 
 import type { Order } from '../../../payload-types'
 
+const stateMap = {
+  1: 'JAMMU AND KASHMIR',
+  2: 'HIMACHAL PRADESH',
+  3: 'PUNJAB',
+  4: 'CHANDIGARH',
+  5: 'UTTARAKHAND',
+  6: 'HARYANA',
+  7: 'DELHI',
+  8: 'RAJASTHAN',
+  9: 'UTTAR PRADESH',
+  10: 'BIHAR',
+  11: 'SIKKIM',
+  12: 'ARUNACHAL PRADESH',
+  13: 'NAGALAND',
+  14: 'MANIPUR',
+  15: 'MIZORAM',
+  16: 'TRIPURA',
+  17: 'MEGHALAYA',
+  18: 'ASSAM',
+  19: 'WEST BENGAL',
+  20: 'JHARKHAND',
+  21: 'ORISSA',
+  22: 'CHHATTISGARH',
+  23: 'MADHYA PRADESH',
+  24: 'GUJARAT',
+  26: 'DADAR AND NAGAR HAVELI & DAMAN AND DIU',
+  27: 'MAHARASHTRA',
+  29: 'KARNATAKA',
+  30: 'GOA',
+  31: 'LAKSHADWEEP',
+  32: 'KERALA',
+  33: 'TAMIL NADU',
+  34: 'PUDUCHERRY',
+  35: 'ANDAMAN AND NICOBAR',
+  36: 'TELANGANA',
+  37: 'ANDHRA PRADESH',
+  38: 'LADAKH',
+  97: 'OTHER TERRITORY',
+  99: 'OTHER COUNTRY'
+}
+
 export const generateHtmlMessage = (order: Order): string => {
   const htmlTemplate = `
     <!DOCTYPE html>
@@ -92,15 +133,19 @@ export const generateHtmlMessage = (order: Order): string => {
           <div class="section-content">
             <p>Invoice Number / Order ID: <%= order.id %></p>
             <p>Invoice Date: <%= new Date(order.createdAt).toLocaleDateString() %></p>
-            <p>GST Registration No: N/A</p>
+            <p>PAN No: ABZFM9815B</p>
+            <p>GST Registration No: 07ABZFM9815B1ZS</p>
           </div>
         </div>
 
         <div class="section">
-          <div class="section-title">Billing Address:</div>
+          <div class="section-title">Billing/Shipping Address:</div>
           <div class="section-content">
             <p>Name: <%= typeof order.orderedBy === 'object' ? order.orderedBy.name : 'N/A' %></p>
-            <p>Address: N/A</p>
+            <p>Address: <%= typeof order.orderedBy === 'object' ? order.orderedBy.deliveryaddress : 'N/A' %></p>
+            <p>City: <%= typeof order.orderedBy === 'object' ? order.orderedBy.city : 'N/A' %></p>
+            <p>State: <%= typeof order.orderedBy === 'object' ? stateMap[order.orderedBy.state] + ' (' + order.orderedBy.state + ')' : 'N/A' %></p>
+            <p>Pincode: <%= typeof order.orderedBy === 'object' ? order.orderedBy.pincode : 'N/A' %></p>
             <p>Phone: <%= typeof order.orderedBy === 'object' ? order.orderedBy.contactnumber : 'N/A' %></p>
             <p>Email: <%= typeof order.orderedBy === 'object' ? order.orderedBy.email : 'N/A' %></p>
           </div>
@@ -114,7 +159,13 @@ export const generateHtmlMessage = (order: Order): string => {
                 <th>Item Description</th>
                 <th>Quantity</th>
                 <th>Size</th>
-                <th>Price</th>
+                <th>Price per Unit</th>
+                <th>Discount</th>
+                <th>Other Charges</th>
+                <th>CGST</th>
+                <th>SGST</th>
+                <th>IGST</th>
+                <th>Total Price per Unit</th>
               </tr>
             </thead>
             <tbody>
@@ -123,7 +174,14 @@ export const generateHtmlMessage = (order: Order): string => {
                 <td><%= typeof item.product === 'object' ? item.product.title : 'N/A' %></td>
                 <td><%= item.quantity || 'N/A' %></td>
                 <td><%= item.size || 'N/A' %></td>
-                <td><%= item.price ? (item.price / 100).toFixed(2) : 'N/A' %></td>
+                <td><%= item.price ? (item.price / 100 / 1.05).toFixed(2) : 'N/A' %></td>
+                <td>0</td>
+                <td>0</td>
+                <% const isDelhi = typeof order.orderedBy === 'object' && order.orderedBy.state === 7; %>
+                <td><%= isDelhi ? ((item.price / 100 / 1.05) * 0.025).toFixed(2) : '0.00' %></td>
+                <td><%= isDelhi ? ((item.price / 100 / 1.05) * 0.025).toFixed(2) : '0.00' %></td>
+                <td><%= isDelhi ? '0.00' : ((item.price / 100 / 1.05) * 0.05).toFixed(2) %></td>
+                <td><%= item.price ? (item.price/100) : N/A %></td>
               </tr>
               <% }) %>
             </tbody>
@@ -132,7 +190,7 @@ export const generateHtmlMessage = (order: Order): string => {
 
         <div class="section">
           <div class="section-content">
-            <p>Total: <%= order.total ? (order.total / 100).toFixed(2) : 'N/A' %></p>
+            <p>Total: <%= order.total ? (order.total/100) : 'N/A' %></p>
             <p>(Incl. of all taxes)</p>
           </div>
         </div>
@@ -146,7 +204,7 @@ export const generateHtmlMessage = (order: Order): string => {
   `
 
   const compiled = template(htmlTemplate)
-  const htmlMessage = compiled({ order })
+  const htmlMessage = compiled({ order, stateMap })
 
   return htmlMessage
 }

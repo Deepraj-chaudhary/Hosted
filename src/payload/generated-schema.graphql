@@ -1461,8 +1461,6 @@ enum Product_moreSizes {
   M
   L
   XL
-  XXL
-  XXXL
 }
 
 type Product_Meta {
@@ -3957,8 +3955,6 @@ enum Product_moreSizes_Input {
   M
   L
   XL
-  XXL
-  XXXL
 }
 
 input Product_slug_operator {
@@ -4632,8 +4628,6 @@ enum ProductVersion_Version_moreSizes {
   M
   L
   XL
-  XXL
-  XXXL
 }
 
 type ProductVersion_Version_Meta {
@@ -4962,8 +4956,6 @@ enum versionsProduct_version__moreSizes_Input {
   M
   L
   XL
-  XXL
-  XXXL
 }
 
 input versionsProduct_version__slug_operator {
@@ -5141,6 +5133,8 @@ type Order {
   stripePaymentIntentID: String
   total: Float!
   items: [Order_Items!]
+  refund: Order_refund
+  refundMessage: String
   updatedAt: DateTime
   createdAt: DateTime
 }
@@ -5149,6 +5143,10 @@ type User {
   id: String
   name: String
   contactnumber: String
+  deliveryaddress: String
+  city: String
+  state: User_state
+  pincode: Float
   roles: [User_roles!]
   purchases(draft: Boolean): [Product!]
   stripeCustomerID: String
@@ -5164,6 +5162,47 @@ type User {
   loginAttempts: Float
   lockUntil: DateTime
   password: String!
+}
+
+enum User_state {
+  _1
+  _2
+  _3
+  _4
+  _5
+  _6
+  _7
+  _8
+  _9
+  _10
+  _11
+  _12
+  _13
+  _14
+  _15
+  _16
+  _17
+  _18
+  _19
+  _20
+  _21
+  _22
+  _23
+  _24
+  _26
+  _27
+  _29
+  _30
+  _31
+  _32
+  _33
+  _34
+  _35
+  _36
+  _37
+  _38
+  _97
+  _99
 }
 
 enum User_roles {
@@ -5195,6 +5234,13 @@ type Order_Items {
   id: String
 }
 
+enum Order_refund {
+  refund
+  Refunded
+  Refunding
+  Failed
+}
+
 type Orders {
   docs: [Order]
   hasNextPage: Boolean
@@ -5218,6 +5264,8 @@ input Order_where {
   items__quantity: Order_items__quantity_operator
   items__size: Order_items__size_operator
   items__id: Order_items__id_operator
+  refund: Order_refund_operator
+  refundMessage: Order_refundMessage_operator
   updatedAt: Order_updatedAt_operator
   createdAt: Order_createdAt_operator
   id: Order_id_operator
@@ -5303,6 +5351,33 @@ input Order_items__id_operator {
   exists: Boolean
 }
 
+input Order_refund_operator {
+  equals: Order_refund_Input
+  not_equals: Order_refund_Input
+  in: [Order_refund_Input]
+  not_in: [Order_refund_Input]
+  all: [Order_refund_Input]
+  exists: Boolean
+}
+
+enum Order_refund_Input {
+  refund
+  Refunded
+  Refunding
+  Failed
+}
+
+input Order_refundMessage_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
 input Order_updatedAt_operator {
   equals: DateTime
   not_equals: DateTime
@@ -5345,6 +5420,8 @@ input Order_where_and {
   items__quantity: Order_items__quantity_operator
   items__size: Order_items__size_operator
   items__id: Order_items__id_operator
+  refund: Order_refund_operator
+  refundMessage: Order_refundMessage_operator
   updatedAt: Order_updatedAt_operator
   createdAt: Order_createdAt_operator
   id: Order_id_operator
@@ -5361,6 +5438,8 @@ input Order_where_or {
   items__quantity: Order_items__quantity_operator
   items__size: Order_items__size_operator
   items__id: Order_items__id_operator
+  refund: Order_refund_operator
+  refundMessage: Order_refundMessage_operator
   updatedAt: Order_updatedAt_operator
   createdAt: Order_createdAt_operator
   id: Order_id_operator
@@ -5385,6 +5464,8 @@ type OrdersDocAccessFields {
   stripePaymentIntentID: OrdersDocAccessFields_stripePaymentIntentID
   total: OrdersDocAccessFields_total
   items: OrdersDocAccessFields_items
+  refund: OrdersDocAccessFields_refund
+  refundMessage: OrdersDocAccessFields_refundMessage
   updatedAt: OrdersDocAccessFields_updatedAt
   createdAt: OrdersDocAccessFields_createdAt
 }
@@ -5602,6 +5683,52 @@ type OrdersDocAccessFields_items_id_Update {
 }
 
 type OrdersDocAccessFields_items_id_Delete {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_refund {
+  create: OrdersDocAccessFields_refund_Create
+  read: OrdersDocAccessFields_refund_Read
+  update: OrdersDocAccessFields_refund_Update
+  delete: OrdersDocAccessFields_refund_Delete
+}
+
+type OrdersDocAccessFields_refund_Create {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_refund_Read {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_refund_Update {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_refund_Delete {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_refundMessage {
+  create: OrdersDocAccessFields_refundMessage_Create
+  read: OrdersDocAccessFields_refundMessage_Read
+  update: OrdersDocAccessFields_refundMessage_Update
+  delete: OrdersDocAccessFields_refundMessage_Delete
+}
+
+type OrdersDocAccessFields_refundMessage_Create {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_refundMessage_Read {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_refundMessage_Update {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_refundMessage_Delete {
   permission: Boolean!
 }
 
@@ -6651,6 +6778,10 @@ type Users {
 input User_where {
   name: User_name_operator
   contactnumber: User_contactnumber_operator
+  deliveryaddress: User_deliveryaddress_operator
+  city: User_city_operator
+  state: User_state_operator
+  pincode: User_pincode_operator
   roles: User_roles_operator
   purchases: User_purchases_operator
   stripeCustomerID: User_stripeCustomerID_operator
@@ -6686,6 +6817,88 @@ input User_contactnumber_operator {
   in: [String]
   not_in: [String]
   all: [String]
+  exists: Boolean
+}
+
+input User_deliveryaddress_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input User_city_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input User_state_operator {
+  equals: User_state_Input
+  not_equals: User_state_Input
+  in: [User_state_Input]
+  not_in: [User_state_Input]
+  all: [User_state_Input]
+  exists: Boolean
+}
+
+enum User_state_Input {
+  _1
+  _2
+  _3
+  _4
+  _5
+  _6
+  _7
+  _8
+  _9
+  _10
+  _11
+  _12
+  _13
+  _14
+  _15
+  _16
+  _17
+  _18
+  _19
+  _20
+  _21
+  _22
+  _23
+  _24
+  _26
+  _27
+  _29
+  _30
+  _31
+  _32
+  _33
+  _34
+  _35
+  _36
+  _37
+  _38
+  _97
+  _99
+}
+
+input User_pincode_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
   exists: Boolean
 }
 
@@ -6816,6 +7029,10 @@ input User_id_operator {
 input User_where_and {
   name: User_name_operator
   contactnumber: User_contactnumber_operator
+  deliveryaddress: User_deliveryaddress_operator
+  city: User_city_operator
+  state: User_state_operator
+  pincode: User_pincode_operator
   roles: User_roles_operator
   purchases: User_purchases_operator
   stripeCustomerID: User_stripeCustomerID_operator
@@ -6835,6 +7052,10 @@ input User_where_and {
 input User_where_or {
   name: User_name_operator
   contactnumber: User_contactnumber_operator
+  deliveryaddress: User_deliveryaddress_operator
+  city: User_city_operator
+  state: User_state_operator
+  pincode: User_pincode_operator
   roles: User_roles_operator
   purchases: User_purchases_operator
   stripeCustomerID: User_stripeCustomerID_operator
@@ -6867,6 +7088,10 @@ type usersDocAccess {
 type UsersDocAccessFields {
   name: UsersDocAccessFields_name
   contactnumber: UsersDocAccessFields_contactnumber
+  deliveryaddress: UsersDocAccessFields_deliveryaddress
+  city: UsersDocAccessFields_city
+  state: UsersDocAccessFields_state
+  pincode: UsersDocAccessFields_pincode
   roles: UsersDocAccessFields_roles
   purchases: UsersDocAccessFields_purchases
   stripeCustomerID: UsersDocAccessFields_stripeCustomerID
@@ -6921,6 +7146,98 @@ type UsersDocAccessFields_contactnumber_Update {
 }
 
 type UsersDocAccessFields_contactnumber_Delete {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_deliveryaddress {
+  create: UsersDocAccessFields_deliveryaddress_Create
+  read: UsersDocAccessFields_deliveryaddress_Read
+  update: UsersDocAccessFields_deliveryaddress_Update
+  delete: UsersDocAccessFields_deliveryaddress_Delete
+}
+
+type UsersDocAccessFields_deliveryaddress_Create {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_deliveryaddress_Read {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_deliveryaddress_Update {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_deliveryaddress_Delete {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_city {
+  create: UsersDocAccessFields_city_Create
+  read: UsersDocAccessFields_city_Read
+  update: UsersDocAccessFields_city_Update
+  delete: UsersDocAccessFields_city_Delete
+}
+
+type UsersDocAccessFields_city_Create {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_city_Read {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_city_Update {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_city_Delete {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_state {
+  create: UsersDocAccessFields_state_Create
+  read: UsersDocAccessFields_state_Read
+  update: UsersDocAccessFields_state_Update
+  delete: UsersDocAccessFields_state_Delete
+}
+
+type UsersDocAccessFields_state_Create {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_state_Read {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_state_Update {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_state_Delete {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_pincode {
+  create: UsersDocAccessFields_pincode_Create
+  read: UsersDocAccessFields_pincode_Read
+  update: UsersDocAccessFields_pincode_Update
+  delete: UsersDocAccessFields_pincode_Delete
+}
+
+type UsersDocAccessFields_pincode_Create {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_pincode_Read {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_pincode_Update {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_pincode_Delete {
   permission: Boolean!
 }
 
@@ -10270,6 +10587,8 @@ type OrdersFields {
   stripePaymentIntentID: OrdersFields_stripePaymentIntentID
   total: OrdersFields_total
   items: OrdersFields_items
+  refund: OrdersFields_refund
+  refundMessage: OrdersFields_refundMessage
   updatedAt: OrdersFields_updatedAt
   createdAt: OrdersFields_createdAt
 }
@@ -10487,6 +10806,52 @@ type OrdersFields_items_id_Update {
 }
 
 type OrdersFields_items_id_Delete {
+  permission: Boolean!
+}
+
+type OrdersFields_refund {
+  create: OrdersFields_refund_Create
+  read: OrdersFields_refund_Read
+  update: OrdersFields_refund_Update
+  delete: OrdersFields_refund_Delete
+}
+
+type OrdersFields_refund_Create {
+  permission: Boolean!
+}
+
+type OrdersFields_refund_Read {
+  permission: Boolean!
+}
+
+type OrdersFields_refund_Update {
+  permission: Boolean!
+}
+
+type OrdersFields_refund_Delete {
+  permission: Boolean!
+}
+
+type OrdersFields_refundMessage {
+  create: OrdersFields_refundMessage_Create
+  read: OrdersFields_refundMessage_Read
+  update: OrdersFields_refundMessage_Update
+  delete: OrdersFields_refundMessage_Delete
+}
+
+type OrdersFields_refundMessage_Create {
+  permission: Boolean!
+}
+
+type OrdersFields_refundMessage_Read {
+  permission: Boolean!
+}
+
+type OrdersFields_refundMessage_Update {
+  permission: Boolean!
+}
+
+type OrdersFields_refundMessage_Delete {
   permission: Boolean!
 }
 
@@ -11162,6 +11527,10 @@ type usersAccess {
 type UsersFields {
   name: UsersFields_name
   contactnumber: UsersFields_contactnumber
+  deliveryaddress: UsersFields_deliveryaddress
+  city: UsersFields_city
+  state: UsersFields_state
+  pincode: UsersFields_pincode
   roles: UsersFields_roles
   purchases: UsersFields_purchases
   stripeCustomerID: UsersFields_stripeCustomerID
@@ -11216,6 +11585,98 @@ type UsersFields_contactnumber_Update {
 }
 
 type UsersFields_contactnumber_Delete {
+  permission: Boolean!
+}
+
+type UsersFields_deliveryaddress {
+  create: UsersFields_deliveryaddress_Create
+  read: UsersFields_deliveryaddress_Read
+  update: UsersFields_deliveryaddress_Update
+  delete: UsersFields_deliveryaddress_Delete
+}
+
+type UsersFields_deliveryaddress_Create {
+  permission: Boolean!
+}
+
+type UsersFields_deliveryaddress_Read {
+  permission: Boolean!
+}
+
+type UsersFields_deliveryaddress_Update {
+  permission: Boolean!
+}
+
+type UsersFields_deliveryaddress_Delete {
+  permission: Boolean!
+}
+
+type UsersFields_city {
+  create: UsersFields_city_Create
+  read: UsersFields_city_Read
+  update: UsersFields_city_Update
+  delete: UsersFields_city_Delete
+}
+
+type UsersFields_city_Create {
+  permission: Boolean!
+}
+
+type UsersFields_city_Read {
+  permission: Boolean!
+}
+
+type UsersFields_city_Update {
+  permission: Boolean!
+}
+
+type UsersFields_city_Delete {
+  permission: Boolean!
+}
+
+type UsersFields_state {
+  create: UsersFields_state_Create
+  read: UsersFields_state_Read
+  update: UsersFields_state_Update
+  delete: UsersFields_state_Delete
+}
+
+type UsersFields_state_Create {
+  permission: Boolean!
+}
+
+type UsersFields_state_Read {
+  permission: Boolean!
+}
+
+type UsersFields_state_Update {
+  permission: Boolean!
+}
+
+type UsersFields_state_Delete {
+  permission: Boolean!
+}
+
+type UsersFields_pincode {
+  create: UsersFields_pincode_Create
+  read: UsersFields_pincode_Read
+  update: UsersFields_pincode_Update
+  delete: UsersFields_pincode_Delete
+}
+
+type UsersFields_pincode_Create {
+  permission: Boolean!
+}
+
+type UsersFields_pincode_Read {
+  permission: Boolean!
+}
+
+type UsersFields_pincode_Update {
+  permission: Boolean!
+}
+
+type UsersFields_pincode_Delete {
   permission: Boolean!
 }
 
@@ -12829,8 +13290,6 @@ enum Product_moreSizes_MutationInput {
   M
   L
   XL
-  XXL
-  XXXL
 }
 
 input mutationProduct_MetaInput {
@@ -12868,8 +13327,6 @@ enum ProductUpdate_moreSizes_MutationInput {
   M
   L
   XL
-  XXL
-  XXXL
 }
 
 input mutationProductUpdate_MetaInput {
@@ -12888,6 +13345,8 @@ input mutationOrderInput {
   stripePaymentIntentID: String
   total: Float!
   items: [mutationOrder_ItemsInput]
+  refund: Order_refund_MutationInput
+  refundMessage: String
   updatedAt: String
   createdAt: String
 }
@@ -12900,11 +13359,20 @@ input mutationOrder_ItemsInput {
   id: String
 }
 
+enum Order_refund_MutationInput {
+  refund
+  Refunded
+  Refunding
+  Failed
+}
+
 input mutationOrderUpdateInput {
   orderedBy: String
   stripePaymentIntentID: String
   total: Float
   items: [mutationOrderUpdate_ItemsInput]
+  refund: OrderUpdate_refund_MutationInput
+  refundMessage: String
   updatedAt: String
   createdAt: String
 }
@@ -12915,6 +13383,13 @@ input mutationOrderUpdate_ItemsInput {
   quantity: Float
   size: String!
   id: String
+}
+
+enum OrderUpdate_refund_MutationInput {
+  refund
+  Refunded
+  Refunding
+  Failed
 }
 
 input mutationMediaInput {
@@ -12982,6 +13457,10 @@ input mutationCategoryUpdate_BreadcrumbsInput {
 input mutationUserInput {
   name: String
   contactnumber: String
+  deliveryaddress: String
+  city: String
+  state: User_state_MutationInput
+  pincode: Float
   roles: [User_roles_MutationInput]
   purchases: [String]
   stripeCustomerID: String
@@ -12997,6 +13476,47 @@ input mutationUserInput {
   loginAttempts: Float
   lockUntil: String
   password: String!
+}
+
+enum User_state_MutationInput {
+  _1
+  _2
+  _3
+  _4
+  _5
+  _6
+  _7
+  _8
+  _9
+  _10
+  _11
+  _12
+  _13
+  _14
+  _15
+  _16
+  _17
+  _18
+  _19
+  _20
+  _21
+  _22
+  _23
+  _24
+  _26
+  _27
+  _29
+  _30
+  _31
+  _32
+  _33
+  _34
+  _35
+  _36
+  _37
+  _38
+  _97
+  _99
 }
 
 enum User_roles_MutationInput {
@@ -13018,6 +13538,10 @@ input mutationUser_Cart_ItemsInput {
 input mutationUserUpdateInput {
   name: String
   contactnumber: String
+  deliveryaddress: String
+  city: String
+  state: UserUpdate_state_MutationInput
+  pincode: Float
   roles: [UserUpdate_roles_MutationInput]
   purchases: [String]
   stripeCustomerID: String
@@ -13033,6 +13557,47 @@ input mutationUserUpdateInput {
   loginAttempts: Float
   lockUntil: String
   password: String
+}
+
+enum UserUpdate_state_MutationInput {
+  _1
+  _2
+  _3
+  _4
+  _5
+  _6
+  _7
+  _8
+  _9
+  _10
+  _11
+  _12
+  _13
+  _14
+  _15
+  _16
+  _17
+  _18
+  _19
+  _20
+  _21
+  _22
+  _23
+  _24
+  _26
+  _27
+  _29
+  _30
+  _31
+  _32
+  _33
+  _34
+  _35
+  _36
+  _37
+  _38
+  _97
+  _99
 }
 
 enum UserUpdate_roles_MutationInput {

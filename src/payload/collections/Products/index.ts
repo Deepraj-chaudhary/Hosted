@@ -150,8 +150,6 @@ const Products: CollectionConfig = {
         { label: 'Medium', value: 'M' },
         { label: 'Large', value: 'L' },
         { label: 'X Large', value: 'XL' },
-        { label: 'XX Large', value: 'XXL' },
-        { label: 'XXX Large', value: 'XXXL' },
       ],
       admin: {
         position: 'sidebar',

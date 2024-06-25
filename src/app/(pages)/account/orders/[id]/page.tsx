@@ -11,6 +11,8 @@ import { formatDateTime } from '../../../../_utilities/formatDateTime'
 import { getMeUser } from '../../../../_utilities/getMeUser'
 import { mergeOpenGraph } from '../../../../_utilities/mergeOpenGraph'
 
+import UpdateRefundStatusForm from './UpdateRefundStatusForm' // Import the form component
+
 import classes from './index.module.scss'
 
 export default async function Order({ params: { id } }) {
@@ -118,6 +120,23 @@ export default async function Order({ params: { id } }) {
         })}
       </div>
       <HR className={classes.hr} />
+      
+      {/* Conditionally render the refund status or the form */}
+      <div className={classes.refundSection}>
+        {order.refund === 'Failed' ? (
+          <div className={classes.refundStatus}>
+            <p>{`Refund Status: ${order.refund}`}</p>
+            {order.refundMessage && <p>{`Failure reason: ${order.refundMessage}`}</p>}
+          </div>
+        ) : order.refund === 'refund' ? (
+          <UpdateRefundStatusForm orderId={order.id} token={token} />
+        ) : (
+          <div className={classes.refundStatus}>
+            <p>{`Refund Status: ${order.refund}`}</p>
+            {order.refundMessage && <p>{`Refund reason: ${order.refundMessage}`}</p>}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

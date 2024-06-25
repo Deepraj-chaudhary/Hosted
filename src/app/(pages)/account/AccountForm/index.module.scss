@@ -22,3 +22,56 @@
 .submit {
   margin-top: calc(var(--base) / 2);
 }
+
+.form {
+  
+
+  .message {
+    margin-bottom: 1rem;
+  }
+
+  .selectWrapper {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+
+    label {
+      margin-bottom: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    select {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+
+      &.error {
+        border-color: red;
+      }
+    }
+
+    .errorMessage {
+      color: red;
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+    }
+  }
+
+  .changePassword {
+    background: none;
+    border: none;
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .submit {
+    align-self: flex-end;
+  }
+}

@@ -406,7 +406,7 @@ export interface Product {
     | null;
   categories?: (string | Category)[] | null;
   relatedProducts?: (string | Product)[] | null;
-  moreSizes?: ('S' | 'M' | 'L' | 'XL' | 'XXL' | 'XXXL')[] | null;
+  moreSizes?: ('S' | 'M' | 'L' | 'XL')[] | null;
   slug?: string | null;
   skipSync?: boolean | null;
   meta?: {
@@ -436,6 +436,8 @@ export interface Order {
         id?: string | null;
       }[]
     | null;
+  refund?: ('refund' | 'Refunded' | 'Refunding' | 'Failed') | null;
+  refundMessage?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -447,6 +449,51 @@ export interface User {
   id: string;
   name?: string | null;
   contactnumber?: string | null;
+  deliveryaddress?: string | null;
+  city?: string | null;
+  state?:
+    | (
+        | '1'
+        | '2'
+        | '3'
+        | '4'
+        | '5'
+        | '6'
+        | '7'
+        | '8'
+        | '9'
+        | '10'
+        | '11'
+        | '12'
+        | '13'
+        | '14'
+        | '15'
+        | '16'
+        | '17'
+        | '18'
+        | '19'
+        | '20'
+        | '21'
+        | '22'
+        | '23'
+        | '24'
+        | '26'
+        | '27'
+        | '29'
+        | '30'
+        | '31'
+        | '32'
+        | '33'
+        | '34'
+        | '35'
+        | '36'
+        | '37'
+        | '38'
+        | '97'
+        | '99'
+      )
+    | null;
+  pincode?: number | null;
   roles?: ('admin' | 'customer')[] | null;
   purchases?: (string | Product)[] | null;
   stripeCustomerID?: string | null;

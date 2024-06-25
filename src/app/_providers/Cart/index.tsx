@@ -32,7 +32,9 @@ const Context = createContext({} as CartContext)
 
 export const useCart = () => useContext(Context)
 
-const arrayHasItems = array => Array.isArray(array) && array.length > 0
+const arrayHasItems = array => {
+  return Array.isArray(array) && array.length > 0;
+}
 
 /**
  * ensure that cart items are fully populated, filter out any items that are not
@@ -43,6 +45,11 @@ const flattenCart = (cart: User['cart']): User['cart'] => ({
   items: cart.items
     .map(item => {
       if (!item?.product || typeof item?.product !== 'object' || !item?.size) {
+        return null
+      }
+
+      // Check if the product's moreSize array includes the item's size
+      if (!item.product.moreSizes.includes(item.size as "S" | "M" | "L" | "XL" )) {
         return null
       }
 
@@ -126,7 +133,7 @@ export const CartProvider = props => {
             },
           })
         } else {
-          // console.log('Setting empty cart')
+          console.log('Setting empty cart')
           dispatchCart({
             type: 'SET_CART',
             payload: {
@@ -237,7 +244,6 @@ export const CartProvider = props => {
   )
 
   const addItemToCart = useCallback((incomingItem: CartItem) => {
-    // console.log('Adding item to cart');
     dispatchCart({
       type: 'ADD_ITEM',
       payload: incomingItem,

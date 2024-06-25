@@ -26,6 +26,7 @@ export default async function Login() {
             width={250}
             height={23}
             className={classes.logo}
+            priority
           />
         </Link>
       </div>
@@ -36,7 +37,7 @@ export default async function Login() {
 
           <div className={classes.formTitle}>
             <h3>Welcome</h3>
-            <Image src="/assets/icons/hand.png" alt="hand" width={30} height={30} />
+            <Image src="/hand.png" alt="hand" width={30} height={30} />
           </div>
 
           <p>Please login here</p>
