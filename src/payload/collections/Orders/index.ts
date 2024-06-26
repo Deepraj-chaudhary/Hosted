@@ -1,14 +1,13 @@
-import type { CollectionConfig } from 'payload/types';
+import type { CollectionConfig } from 'payload/types'
 
-import { admins } from '../../access/admins';
-import { adminsOrLoggedIn } from '../../access/adminsOrLoggedIn';
-import { adminsOrOrderedBy } from './access/adminsOrOrderedBy';
-import { clearUserCart } from './hooks/clearUserCart';
-import { populateOrderedBy } from './hooks/populateOrderedBy';
-import { updateUserPurchases } from './hooks/updateUserPurchases';
-import { generateHtmlMessage } from './mail/htmlmessage';
-import { generateOrderPDF } from './mail/pdfGenerator';
-import { LinkToPaymentIntent } from './ui/LinkToPaymentIntent';
+import { admins } from '../../access/admins'
+import { adminsOrLoggedIn } from '../../access/adminsOrLoggedIn'
+import { adminsOrOrderedBy } from './access/adminsOrOrderedBy'
+import { clearUserCart } from './hooks/clearUserCart'
+import { populateOrderedBy } from './hooks/populateOrderedBy'
+import { updateUserPurchases } from './hooks/updateUserPurchases'
+import { generateHtmlMessage } from './mail/htmlmessage'
+import { generateOrderPDF } from './mail/pdfGenerator'
 
 export const Orders: CollectionConfig = {
   slug: 'orders',
@@ -23,15 +22,21 @@ export const Orders: CollectionConfig = {
       clearUserCart,
       // New Hook to Send Order Confirmation Email with PDF
       async ({ doc, operation, req }) => {
-        if (operation === 'create') {
-          const user = doc?.orderedBy;
+        if (
+          operation === 'update' &&
+          doc?.stripePaymentIntentID === 'PAID' &&
+          doc?.refund !== 'Refunded' &&
+          doc?.refund !== 'Refunding' &&
+          doc?.refund !== 'Failed'
+        ) {
+          const user = doc?.orderedBy
           if (user?.email) {
             // Generate the PDF with order details
-            const pdfBuffer = await generateOrderPDF(doc);
+            const pdfBuffer = await generateOrderPDF(doc)
 
             const message = {
               to: user.email,
-              from: 'no-reply@yourstore.com',
+              from: 'no-reply@merph.com',
               subject: 'Order Confirmation',
               text: `Hi ${user.name}, your order has been placed successfully.`,
               html: generateHtmlMessage(doc),
@@ -42,14 +47,14 @@ export const Orders: CollectionConfig = {
                   contentType: 'application/pdf',
                 },
               ],
-            };
+            }
 
             try {
               // Accessing payload instance through req object
-              await req.payload.sendEmail(message);
-              console.log('Order confirmation email sent successfully'); // eslint-disable-line no-console
+              await req.payload.sendEmail(message)
+              console.log('Order confirmation email sent successfully') // eslint-disable-line no-console
             } catch (error: unknown) {
-              console.error('Error sending order confirmation email:', error); // eslint-disable-line no-console
+              console.error('Error sending order confirmation email:', error) // eslint-disable-line no-console
             }
           }
         }
@@ -76,16 +81,10 @@ export const Orders: CollectionConfig = {
     },
     {
       name: 'stripePaymentIntentID',
-      label: 'Payment Intent ID',
+      label: 'Cashfree Payment Intent',
       type: 'text',
       admin: {
         position: 'sidebar',
-        components: {
-          Field: LinkToPaymentIntent,
-        },
-      },
-      access: {
-        update: admins,
       },
     },
     {

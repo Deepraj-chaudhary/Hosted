@@ -185,7 +185,7 @@ const AccountForm: React.FC = () => {
               {...register('state', { required: true })}
               className={errors.state ? classes.error : ''}
             >
-              {stateOptions.map((option) => (
+              {stateOptions.map(option => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -193,7 +193,14 @@ const AccountForm: React.FC = () => {
             </select>
             {errors.state && <p className={classes.errorMessage}>State is required</p>}
           </div>
-          <Input name="pincode" label="Pincode" register={register} required error={errors.pincode} type="number" />
+          <Input
+            name="pincode"
+            label="Pincode"
+            register={register}
+            required
+            error={errors.pincode}
+            type="number"
+          />
 
           <p>
             {'Change your account details below, or '}
@@ -234,7 +241,7 @@ const AccountForm: React.FC = () => {
             label="Confirm Password"
             required
             register={register}
-            validate={(value) => value === password.current || 'The passwords do not match'}
+            validate={value => value === password.current || 'The passwords do not match'}
             error={errors.passwordConfirm}
           />
         </Fragment>

@@ -62,7 +62,7 @@ export default async function Cart() {
         <h3>Cart</h3>
         <CartPage settings={settings} page={page} />
       </Gutter>
-      <Blocks blocks={page?.layout}  />
+      <Blocks blocks={page?.layout} />
     </div>
   )
 }

@@ -10,7 +10,6 @@ import { Price } from '../../../../_components/Price'
 import { formatDateTime } from '../../../../_utilities/formatDateTime'
 import { getMeUser } from '../../../../_utilities/getMeUser'
 import { mergeOpenGraph } from '../../../../_utilities/mergeOpenGraph'
-
 import UpdateRefundStatusForm from './UpdateRefundStatusForm' // Import the form component
 
 import classes from './index.module.scss'
@@ -120,7 +119,7 @@ export default async function Order({ params: { id } }) {
         })}
       </div>
       <HR className={classes.hr} />
-      
+
       {/* Conditionally render the refund status or the form */}
       <div className={classes.refundSection}>
         {order.refund === 'Failed' ? (

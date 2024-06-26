@@ -33,7 +33,7 @@ const Context = createContext({} as CartContext)
 export const useCart = () => useContext(Context)
 
 const arrayHasItems = array => {
-  return Array.isArray(array) && array.length > 0;
+  return Array.isArray(array) && array.length > 0
 }
 
 /**
@@ -49,7 +49,7 @@ const flattenCart = (cart: User['cart']): User['cart'] => ({
       }
 
       // Check if the product's moreSize array includes the item's size
-      if (!item.product.moreSizes.includes(item.size as "S" | "M" | "L" | "XL" )) {
+      if (!item.product.moreSizes.includes(item.size as 'S' | 'M' | 'L' | 'XL')) {
         return null
       }
 
@@ -133,7 +133,7 @@ export const CartProvider = props => {
             },
           })
         } else {
-          console.log('Setting empty cart')
+          // console.log('Setting empty cart')
           dispatchCart({
             type: 'SET_CART',
             payload: {

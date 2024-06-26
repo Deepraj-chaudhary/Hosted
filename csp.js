@@ -7,6 +7,7 @@ const policies = {
     'https://checkout.stripe.com',
     'https://js.stripe.com',
     'https://maps.googleapis.com',
+    'https://sdk.cashfree.com', // Added Cashfree SDK
   ],
   'child-src': ["'self'"],
   'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
@@ -17,12 +18,14 @@ const policies = {
     'https://checkout.stripe.com',
     'https://js.stripe.com',
     'https://hooks.stripe.com',
+    'https://sdk.cashfree.com', // Added Cashfree SDK
   ],
   'connect-src': [
     "'self'",
     'https://checkout.stripe.com',
     'https://api.stripe.com',
     'https://maps.googleapis.com',
+    'https://api.cashfree.com', // Added Cashfree API
   ],
 }
 

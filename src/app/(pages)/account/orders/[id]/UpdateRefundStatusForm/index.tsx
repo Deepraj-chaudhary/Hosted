@@ -14,7 +14,10 @@ type FormData = {
   refundMessage: string
 }
 
-const UpdateRefundStatusForm: React.FC<{ orderId: string; token: string }> = ({ orderId, token }) => {
+const UpdateRefundStatusForm: React.FC<{ orderId: string; token: string }> = ({
+  orderId,
+  token,
+}) => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const {
@@ -48,7 +51,7 @@ const UpdateRefundStatusForm: React.FC<{ orderId: string; token: string }> = ({ 
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
-      <Message error={error} success={success}/>
+      <Message error={error} success={success} />
       <Input
         name="refundMessage"
         label="Why would you like to refund this order?"
@@ -63,7 +66,7 @@ const UpdateRefundStatusForm: React.FC<{ orderId: string; token: string }> = ({ 
         disabled={isSubmitting}
         appearance="primary"
         // className={classes.submit}
-      /> 
+      />
     </form>
   )
 }

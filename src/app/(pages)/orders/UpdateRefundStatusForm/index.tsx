@@ -1,69 +1,71 @@
-  'use client'
+'use client'
 
-  import React, { useState } from 'react'
-  import { useForm } from 'react-hook-form'
-  import { useRouter } from 'next/navigation'
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 
-  import { Button } from '../../../_components/Button'
-  import { Input } from '../../../_components/Input'
-  import { Message } from '../../../_components/Message'
+import { Button } from '../../../_components/Button'
+import { Input } from '../../../_components/Input'
+import { Message } from '../../../_components/Message'
 
+type FormData = {
+  refundMessage: string
+}
 
-  type FormData = {
-    refundMessage: string
-  }
+const UpdateRefundStatusForm: React.FC<{ orderId: string; token: string }> = ({
+  orderId,
+  token,
+}) => {
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isLoading },
+    reset,
+  } = useForm<FormData>()
 
-  const UpdateRefundStatusForm: React.FC<{ orderId: string; token: string }> = ({ orderId, token }) => {
-    const [error, setError] = useState('')
-    const [success, setSuccess] = useState('')
-    const {
-      register,
-      handleSubmit,
-      formState: { errors, isLoading },
-      reset,
-    } = useForm<FormData>()
+  const router = useRouter()
 
-    const router = useRouter()
+  const onSubmit = async (data: FormData) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/${orderId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ refund: 'refunding', refundMessage: data.refundMessage }),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `JWT ${token}`,
+      },
+    })
 
-    const onSubmit = async (data: FormData) => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/${orderId}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ refund: 'refunding', refundMessage: data.refundMessage }),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `JWT ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        setSuccess('Successfully updated refund status.')
-        setError('')
-        router.refresh() // Refresh the page to show the updated status
-      } else {
-        setError('There was a problem updating the refund status.')
-      }
+    if (response.ok) {
+      setSuccess('Successfully updated refund status.')
+      setError('')
+      router.refresh() // Refresh the page to show the updated status
+    } else {
+      setError('There was a problem updating the refund status.')
     }
-
-    return (
-      <form onSubmit={handleSubmit(onSubmit)} >
-        <Message error={error} success={success} />
-        <Input
-          name="refundMessage"
-          label="Refund Message"
-          required
-          register={register}
-          error={errors.refundMessage}
-          type="text"
-        />
-        <Button
-          type="submit"
-          label={isLoading ? 'Processing' : 'Update Refund Status'}
-          disabled={isLoading}
-          appearance="primary"
-          // className={classes.submit}
-        />
-      </form>
-    )
   }
 
-  export default UpdateRefundStatusForm
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Message error={error} success={success} />
+      <Input
+        name="refundMessage"
+        label="Refund Message"
+        required
+        register={register}
+        error={errors.refundMessage}
+        type="text"
+      />
+      <Button
+        type="submit"
+        label={isLoading ? 'Processing' : 'Update Refund Status'}
+        disabled={isLoading}
+        appearance="primary"
+        // className={classes.submit}
+      />
+    </form>
+  )
+}
+
+export default UpdateRefundStatusForm

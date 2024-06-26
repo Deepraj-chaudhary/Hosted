@@ -31,7 +31,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "src/app/(pages)/checkout/Cashfree/index.tsx"  ],
+, "src/app/(pages)/checkout/Cashfree/index.tsx", "src/app/(pages)/checkout/CheckoutForm/cashfreeHandler.ts"  ],
   "exclude": [
     "node_modules"
   ],

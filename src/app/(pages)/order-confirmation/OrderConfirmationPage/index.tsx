@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 
 import { Button } from '../../../_components/Button'
@@ -12,13 +12,46 @@ import classes from './index.module.scss'
 export const OrderConfirmationPage: React.FC<{}> = () => {
   const searchParams = useSearchParams()
   const orderID = searchParams.get('order_id')
-  const error = searchParams.get('error')
+  const [error, setError] = useState<string | null>(null)
+  const [status, setStatus] = useState<string | null>(null)
 
   const { clearCart } = useCart()
 
   useEffect(() => {
-    clearCart()
-  }, [clearCart])
+    const checkPaymentStatus = async () => {
+      try {
+        // console.log('Checking payment status...')
+        const response = await fetch(`/api/get-order/${orderID}`)
+        const data = await response.json()
+        // console.log(data)
+        if (response.ok) {
+          setStatus(data.order_status)
+          // console.log(data.order_status)
+          if (data.order_status === 'PAID') {
+            // Update order status to 'PAID' in your system
+            await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/${orderID}`, {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                stripePaymentIntentID: 'PAID',
+              }),
+            })
+          }
+        } else {
+          setError(data.message || 'Error fetching payment status')
+        }
+      } catch (err) {
+        setError('Error fetching payment status')
+      }
+    }
+
+    if (orderID) {
+      checkPaymentStatus()
+      clearCart()
+    }
+  }, [orderID, clearCart])
 
   return (
     <div>
@@ -37,21 +70,47 @@ export const OrderConfirmationPage: React.FC<{}> = () => {
             />
           </div>
         </Fragment>
-      ) : (
+      ) : status === 'PAID' ? (
         <Fragment>
           <h1>Thank you for your order!</h1>
           <p>
-            {`Your order has been confirmed. You will receive an email confirmation shortly. Your order ID is ${orderID}.`}
+            {`Your order has been confirmed. You will receive an email confirmation shortly. Order ID: ${orderID}`}
           </p>
           <div className={classes.actions}>
             <Button href={`/account/orders/${orderID}`} label="View order" appearance="primary" />
+            <Button href="/account/orders" label="View all orders" appearance="secondary" />
+          </div>
+        </Fragment>
+      ) : status === 'PENDING' ? (
+        <Fragment>
+          <Message error="Payment is pending" />
+          <p>
+            {`Your payment is currently pending. Please try again later or contact us for assistance.`}
+          </p>
+          <div className={classes.actions}>
+            <Button href="/account" label="View account" appearance="primary" />
             <Button
-              href={`${process.env.NEXT_PUBLIC_SERVER_URL}/account/orders`}
+              href={`${process.env.NEXT_PUBLIC_SERVER_URL}/orders`}
               label="View all orders"
               appearance="secondary"
             />
           </div>
         </Fragment>
+      ) : status === 'FAILED' ? (
+        <Fragment>
+          <Message error="Payment failed" />
+          <p>{`Your payment was unsuccessful. Please try again or contact us for assistance.`}</p>
+          <div className={classes.actions}>
+            <Button href="/account" label="View account" appearance="primary" />
+            <Button
+              href={`${process.env.NEXT_PUBLIC_SERVER_URL}/orders`}
+              label="View all orders"
+              appearance="secondary"
+            />
+          </div>
+        </Fragment>
+      ) : (
+        <div className={classes.loading}></div>
       )}
     </div>
   )

@@ -40,7 +40,7 @@ const stateMap = {
   37: 'ANDHRA PRADESH',
   38: 'LADAKH',
   97: 'OTHER TERRITORY',
-  99: 'OTHER COUNTRY'
+  99: 'OTHER COUNTRY',
 }
 
 export const generateHtmlMessage = (order: Order): string => {
