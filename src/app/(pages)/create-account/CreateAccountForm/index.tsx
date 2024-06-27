@@ -49,6 +49,10 @@ const CreateAccountForm: React.FC = () => {
       })
 
       if (!response.ok) {
+        if (response.statusText === 'Bad Request') {
+          setError('Processing')
+          return
+        }
         const message = response.statusText || 'There was an error creating the account.'
         setError(message)
         return

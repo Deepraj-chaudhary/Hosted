@@ -7,6 +7,7 @@ import { AddToCartButton } from '../../_components/AddToCartButton'
 import { Gutter } from '../../_components/Gutter'
 import { Media } from '../../_components/Media'
 import { Price } from '../../_components/Price'
+import { useAuth } from '../../_providers/Auth'
 
 import classes from './index.module.scss'
 
@@ -36,10 +37,29 @@ const SizeOptions: React.FC<{
   )
 }
 
+const DotIndicator: React.FC<{ currentImageIndex: number }> = ({ currentImageIndex }) => {
+  return (
+    <div className={classes.dotContainer}>
+      {[0, 1].map(index => (
+        <div
+          key={index}
+          className={`${classes.dot} ${currentImageIndex === index ? classes.activeDot : ''}`}
+        />
+      ))}
+    </div>
+  )
+}
+
 export const ProductHero: React.FC<{
   product: Product
 }> = ({ product }) => {
-  const { title, categories, moreSizes, meta: { image: metaImage, description } = {} } = product
+  const {
+    title,
+    categories,
+    moreSizes,
+    media,
+    meta: { image: metaImage, description } = {},
+  } = product
 
   const [size, setSize] = useState('null') // assuming sizes are in an array
   const TotalSizes: string[] = ['S', 'M', 'L', 'XL']
@@ -47,13 +67,42 @@ export const ProductHero: React.FC<{
 
   const anySizesAvailable = TotalSizes.some((size: string) => AvailableSizes.includes(size))
 
+  // Add state for the current image
+  const [currentImage, setCurrentImage] = useState(metaImage)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  // Function to switch to the next image
+  const switchImage = () => {
+    setIsTransitioning(true)
+    setTimeout(() => {
+      if (currentImageIndex === 0) {
+        setCurrentImage(media)
+        setCurrentImageIndex(1)
+      } else {
+        setCurrentImage(metaImage)
+        setCurrentImageIndex(0)
+      }
+      setIsTransitioning(false)
+    }, 500) // Duration should match the transition time
+  }
+
+  const { user } = useAuth()
+
   return (
     <Gutter className={classes.productHero}>
-      <div className={classes.mediaWrapper}>
-        {!metaImage && <div className={classes.placeholder}>No image</div>}
-        {metaImage && typeof metaImage !== 'string' && (
-          <Media imgClassName={classes.image} resource={metaImage} fill />
+      <div className={classes.mediaWrapper} onClick={switchImage}>
+        {!currentImage && <div className={classes.placeholder}>No image</div>}
+        {currentImage && typeof currentImage !== 'string' && (
+          <Media
+            imgClassName={`${classes.image} ${
+              isTransitioning ? classes.imageHidden : classes.imageVisible
+            }`}
+            resource={currentImage}
+            fill
+          />
         )}
+        <DotIndicator currentImageIndex={currentImageIndex} />
       </div>
 
       <div className={classes.details}>
@@ -88,7 +137,12 @@ export const ProductHero: React.FC<{
         {anySizesAvailable ? (
           <>
             <div className={classes.description}>
-              <h6>Sizes</h6>
+              <h6>
+                Sizes{' '}
+                <a href="/size-charts" className={classes.sizeChartLink}>
+                  Size Charts
+                </a>
+              </h6>
             </div>
             <SizeOptions
               TotalSizes={TotalSizes}
@@ -105,6 +159,8 @@ export const ProductHero: React.FC<{
         ) : (
           <p className={classes.outOfStockMessage}>This item is currently out of stock</p>
         )}
+
+        {!user && <p className={classes.loginMessage}>Please log in to save your cart</p>}
       </div>
     </Gutter>
   )

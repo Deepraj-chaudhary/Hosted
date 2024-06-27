@@ -11,3 +11,10 @@
   flex-wrap: wrap;
   gap: var(--base);
 }
+
+.details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--base);
+  background-color: var(--color-light);  
+}

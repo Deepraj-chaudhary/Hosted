@@ -1,4 +1,3 @@
-// index.tsx
 'use client'
 
 import React, { useCallback, useEffect } from 'react'
@@ -110,7 +109,7 @@ const CheckoutForm: React.FC<{}> = () => {
 
         // Create order with Cashfree
         const cashfreeResponse = await createCashfreeOrder(orderData)
-        // console.log('Cashfree response:', cashfreeResponse)
+        // console.log('Cashfree response:', cashfreeResponse);
         const { paymentSessionId } = cashfreeResponse
 
         if (paymentSessionId) {
@@ -119,15 +118,15 @@ const CheckoutForm: React.FC<{}> = () => {
             paymentSessionId: paymentSessionId,
             redirectTarget: '_self',
           }
-          // console.log('Opening Cashfree checkout:', checkoutOptions)
+          // console.log('Opening Cashfree checkout:', checkoutOptions);
           openCashfreeCheckout(checkoutOptions).then(
             async (result: { error?: Error; paymentDetails?: any }) => {
               if (result.error) {
                 // Handle errors
                 // console.log(
                 //   'User has closed the popup or there is some payment error, Check for Payment Status',
-                // )
-                // console.log(result.error)
+                // );
+                // console.log(result.error);
                 setError(`Error: ${result.error.message}`)
               }
               if (result.paymentDetails) {
@@ -148,7 +147,18 @@ const CheckoutForm: React.FC<{}> = () => {
 
   return (
     <form onSubmit={handleSubmit} className={classes.form}>
-      {error && <Message error={error} />}
+      {error && (
+        <div className={classes.errorMessage}>
+          {error === 'Please complete your profile before proceeding to checkout' && (
+            <div>
+              <Button label="Add Delivery Details!" href="/account" appearance="secondary" />
+            </div>
+          )}
+          {error !== 'Please complete your profile before proceeding to checkout' && (
+            <Message error={error} />
+          )}
+        </div>
+      )}
       <div className={classes.actions}>
         <Button label="Back to cart" href="/cart" appearance="secondary" />
         <Button

@@ -46,14 +46,6 @@ export const cartReducer = (cart: CartType, action: CartAction): CartType => {
           accItem => accItem.size === item.size && accItem.product?.id === item.product?.id,
         )
 
-        if (!item.product || typeof item.product !== 'object' || !item.size) {
-          return acc
-        }
-
-        if (!item.product.moreSizes.includes(item.size as 'S' | 'M' | 'L' | 'XL')) {
-          return acc
-        }
-
         if (!duplicate) {
           return [...acc, item]
         }

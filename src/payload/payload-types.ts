@@ -407,6 +407,7 @@ export interface Product {
   categories?: (string | Category)[] | null;
   relatedProducts?: (string | Product)[] | null;
   moreSizes?: ('S' | 'M' | 'L' | 'XL')[] | null;
+  media?: string | Media | null;
   slug?: string | null;
   skipSync?: boolean | null;
   meta?: {

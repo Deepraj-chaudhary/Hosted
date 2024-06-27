@@ -155,6 +155,11 @@ const Products: CollectionConfig = {
         position: 'sidebar',
       },
     },
+    {
+      name: 'media',
+      type: 'upload',
+      relationTo: 'media',
+    },
     slugField(),
     {
       name: 'skipSync',

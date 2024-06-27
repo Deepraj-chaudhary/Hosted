@@ -32,9 +32,7 @@ const Context = createContext({} as CartContext)
 
 export const useCart = () => useContext(Context)
 
-const arrayHasItems = array => {
-  return Array.isArray(array) && array.length > 0
-}
+const arrayHasItems = array => Array.isArray(array) && array.length > 0
 
 /**
  * ensure that cart items are fully populated, filter out any items that are not
@@ -45,11 +43,6 @@ const flattenCart = (cart: User['cart']): User['cart'] => ({
   items: cart.items
     .map(item => {
       if (!item?.product || typeof item?.product !== 'object' || !item?.size) {
-        return null
-      }
-
-      // Check if the product's moreSize array includes the item's size
-      if (!item.product.moreSizes.includes(item.size as 'S' | 'M' | 'L' | 'XL')) {
         return null
       }
 
@@ -125,7 +118,7 @@ export const CartProvider = props => {
               }
             }),
           )
-          // console.log('Setting cart from local storage')
+          //console.log('Setting cart from local storage')
           dispatchCart({
             type: 'SET_CART',
             payload: {
@@ -194,6 +187,7 @@ export const CartProvider = props => {
       }
 
       try {
+        //console.log('Syncing cart to Payload')
         const syncCartToPayload = async () => {
           const req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/${user.id}`, {
             // Make sure to include cookies with fetch
@@ -244,6 +238,7 @@ export const CartProvider = props => {
   )
 
   const addItemToCart = useCallback((incomingItem: CartItem) => {
+    // console.log('Adding item to cart');
     dispatchCart({
       type: 'ADD_ITEM',
       payload: incomingItem,

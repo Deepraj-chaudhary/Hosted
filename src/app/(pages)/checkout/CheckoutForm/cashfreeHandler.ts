@@ -10,7 +10,7 @@ let cashfree: Cashfree | null = null
 export const initializeCashfree = async (): Promise<Cashfree | null> => {
   try {
     cashfree = (await load({
-      mode: 'sandbox',
+      mode: process.env.CASHFREE_ENVIRONMENT === 'production' ? 'production' : 'sandbox',
     })) as Cashfree
     return cashfree
   } catch (error: unknown) {

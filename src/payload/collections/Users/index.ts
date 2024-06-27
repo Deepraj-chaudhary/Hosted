@@ -73,17 +73,20 @@ const Users: CollectionConfig = {
       async ({ doc, operation, req }) => {
         if (operation === 'create') {
           const { name, email } = doc
+          try {
+            if (email) {
+              const message = await sendWelcomeEmail(name, email)
 
-          if (email) {
-            const message = await sendWelcomeEmail(name, email)
-
-            try {
-              // Use the Payload instance to send the email
-              await req.payload.sendEmail(message)
-              console.log('Welcome email sent successfully') // eslint-disable-line no-console
-            } catch (error: unknown) {
-              console.error('Error sending welcome email:', error) // eslint-disable-line no-console
+              try {
+                // Use the Payload instance to send the email
+                await req.payload.sendEmail(message)
+                console.log('Welcome email sent successfully') // eslint-disable-line no-console
+              } catch (error: unknown) {
+                console.error('Error sending welcome email:', error) // eslint-disable-line no-console
+              }
             }
+          } catch (error: unknown) {
+            //do nothing
           }
         }
       },

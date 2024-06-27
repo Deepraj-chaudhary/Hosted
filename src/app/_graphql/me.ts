@@ -8,6 +8,8 @@ export const ME_QUERY = `query {
       name
       contactnumber
       deliveryaddress
+      city
+      state
       pincode
       ${CART}
       roles
