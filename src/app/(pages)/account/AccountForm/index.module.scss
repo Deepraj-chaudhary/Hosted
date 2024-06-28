@@ -9,7 +9,7 @@
   width: 100%;
 
   @include mid-break {
-    width: 100%;
+    width: 90%;
   }
 }
 
@@ -41,11 +41,15 @@
     }
 
     select {
-      padding: 0.5rem;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-
+      padding: 1rem;
+      font-size: 0.8rem;
+      border: 1px solid #807272;
+      border-radius: 9px;
+      transition: border-color 0.2s;
+      width : 100%;
+      @include mid-break {
+        width: 90%;
+      }
       &.error {
         border-color: red;
       }

@@ -146,4 +146,9 @@ export default buildConfig({
     }),
     payloadCloud(),
   ],
+  rateLimit: {
+    window: 900000, // 15 minutes in milliseconds
+    max: 500, // max number of requests per IP within the window
+    trustProxy: true, // enable this to correctly handle IP addresses behind a proxy
+  },
 })

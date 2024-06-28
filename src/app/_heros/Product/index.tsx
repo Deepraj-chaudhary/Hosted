@@ -139,8 +139,8 @@ export const ProductHero: React.FC<{
             <div className={classes.description}>
               <h6>
                 Sizes{' '}
-                <a href="/size-charts" className={classes.sizeChartLink}>
-                  Size Charts
+                <a href="/size-chart" className={classes.sizeChartLink}>
+                  Size Chart
                 </a>
               </h6>
             </div>

@@ -10,11 +10,11 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    background-image: url('/assets/images/image-1.jpg');
+    background-image: url('/assets/images/image-5 .png');
   }
 
   p {
-    color: var(--color-gray-500);
+    color: var(--color-gray-  00);
   }
 }
 
@@ -41,7 +41,7 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  background-image: url('/assets/images/image-1.jpg');
+  background-image: url('/assets/images/image-  .png');
 
   @include mid-break {
     background: none;

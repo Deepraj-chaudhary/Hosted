@@ -20,27 +20,51 @@ export const OrderConfirmationPage: React.FC<{}> = () => {
   useEffect(() => {
     const checkPaymentStatus = async () => {
       try {
-        // console.log('Checking payment status...')
-        const response = await fetch(`/api/get-order/${orderID}`)
-        const data = await response.json()
-        // console.log(data)
-        if (response.ok) {
-          setStatus(data.order_status)
-          // console.log(data.order_status)
-          if (data.order_status === 'PAID') {
-            // Update order status to 'PAID' in your system
-            await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/${orderID}`, {
-              method: 'PATCH',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                stripePaymentIntentID: 'PAID',
-              }),
-            })
-          }
+        // Fetch order details from the server
+        const orderResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/${orderID}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        )
+
+        const orderData = await orderResponse.json()
+
+        if (!orderResponse.ok) {
+          setError('Error fetching order details')
+          return
+        }
+
+        if (orderData.stripePaymentIntentID === 'Cash On Delivery') {
+          // If payment method is Cash On Delivery, directly set status as PAID
+          setStatus('PAID')
+          clearCart()
         } else {
-          setError(data.message || 'Error fetching payment status')
+          // Otherwise, check payment status with Cashfree
+          const response = await fetch(`/api/get-order/${orderID}`)
+          const data = await response.json()
+
+          if (response.ok) {
+            setStatus(data.order_status)
+            if (data.order_status === 'PAID') {
+              // Update order status to 'PAID' in your system
+              await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/${orderID}`, {
+                method: 'PATCH',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  stripePaymentIntentID: 'PAID',
+                }),
+              })
+              setStatus('PAID')
+              clearCart()
+            }
+          } else {
+            setError(data.message || 'Error fetching payment status')
+          }
         }
       } catch (err) {
         setError('Error fetching payment status')
@@ -49,7 +73,6 @@ export const OrderConfirmationPage: React.FC<{}> = () => {
 
     if (orderID) {
       checkPaymentStatus()
-      clearCart()
     }
   }, [orderID, clearCart])
 

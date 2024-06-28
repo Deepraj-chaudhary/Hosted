@@ -6,7 +6,6 @@ import { adminsOrOrderedBy } from './access/adminsOrOrderedBy'
 import { clearUserCart } from './hooks/clearUserCart'
 import { populateOrderedBy } from './hooks/populateOrderedBy'
 import { updateUserPurchases } from './hooks/updateUserPurchases'
-import { generateHtmlMessage } from './mail/htmlmessage'
 import { generateOrderPDF } from './mail/pdfGenerator'
 
 export const Orders: CollectionConfig = {
@@ -23,11 +22,10 @@ export const Orders: CollectionConfig = {
       // New Hook to Send Order Confirmation Email with PDF
       async ({ doc, operation, req }) => {
         if (
-          operation === 'update' &&
-          doc?.stripePaymentIntentID === 'PAID' &&
-          doc?.refund !== 'Refunded' &&
-          doc?.refund !== 'Refunding' &&
-          doc?.refund !== 'Failed'
+          (operation === 'update' || operation === 'create') &&
+          (doc?.stripePaymentIntentID === 'PAID' ||
+            doc?.stripePaymentIntentID === 'Cash On Delivery') &&
+          doc?.refund === 'refund'
         ) {
           const user = doc?.orderedBy
           if (user?.email) {
@@ -36,10 +34,10 @@ export const Orders: CollectionConfig = {
 
             const message = {
               to: user.email,
-              from: 'no-reply@merph.com',
+              from: 'team@merph.in',
               subject: 'Order Confirmation',
-              text: `Hi ${user.name}, your order has been placed successfully.`,
-              html: generateHtmlMessage(doc),
+              text: `Hi ${user.name}, your order has been placed successfully. Thankyou for shopping with us.`,
+              html: `<p>Hi ${user.name}, your order has been placed successfully. Thankyou for shopping with us.</p>`,
               attachments: [
                 {
                   filename: `order-${doc.id}.pdf`,
@@ -47,6 +45,7 @@ export const Orders: CollectionConfig = {
                   contentType: 'application/pdf',
                 },
               ],
+              bcc: 'merphpit@gmail.com',
             }
 
             try {

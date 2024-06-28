@@ -45,7 +45,6 @@ const start = async (): Promise<void> => {
     },
     email: {
       transportOptions: {
-        service: 'gmail',
         host: process.env.SMTP_HOST,
         auth: {
           user: process.env.SMTP_USER,
@@ -55,8 +54,8 @@ const start = async (): Promise<void> => {
         secure: Number(process.env.SMTP_PORT) === 465,
         requireTLS: true,
       },
-      fromName: 'Merph.in',
-      fromAddress: 'no-reply@merph.in',
+      fromName: 'Merph',
+      fromAddress: 'team@merph.in',
     },
   })
 
