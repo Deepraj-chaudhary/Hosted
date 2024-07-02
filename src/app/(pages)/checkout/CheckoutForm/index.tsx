@@ -6,6 +6,7 @@ import { Order } from '../../../../payload/payload-types'
 import { Button } from '../../../_components/Button'
 import { Message } from '../../../_components/Message'
 import { priceFromJSON } from '../../../_components/Price'
+import { RadioButton } from '../../../_components/Radio'
 import { useAuth } from '../../../_providers/Auth'
 import { useCart } from '../../../_providers/Cart'
 import { stateOptions } from '../../../constants'
@@ -29,8 +30,8 @@ interface CheckoutOptions {
 const CheckoutForm: React.FC<{}> = () => {
   const [error, setError] = React.useState<string | null>(null)
   const [isLoading, setIsLoading] = React.useState(false)
-  const [isCashOnDelivery, setIsCashOnDelivery] = React.useState(false)
   const [detailsConfirmed, setDetailsConfirmed] = React.useState(false)
+  const [paymentMethod, setPaymentMethod] = React.useState<'payNow' | 'cod'>('payNow')
   const router = useRouter()
   const { cart, cartTotal } = useCart()
   const { user, setUser } = useAuth()
@@ -181,7 +182,7 @@ const CheckoutForm: React.FC<{}> = () => {
   }, [router, cart, cartTotal, user])
 
   const handleCashOnDelivery = useCallback(async () => {
-    setIsCashOnDelivery(true)
+    setIsLoading(true)
 
     try {
       // Proceed with creating the order in Payload CMS
@@ -216,9 +217,13 @@ const CheckoutForm: React.FC<{}> = () => {
       const msg = err instanceof Error ? err.message : 'Something went wrong.'
       setError(`Error while creating order: ${msg}`)
     } finally {
-      setIsCashOnDelivery(false)
+      setIsLoading(false)
     }
   }, [router, cart, cartTotal])
+
+  const handlePaymentMethodChange = (method: 'payNow' | 'cod') => {
+    setPaymentMethod(method)
+  }
 
   return (
     <>
@@ -277,28 +282,49 @@ const CheckoutForm: React.FC<{}> = () => {
       ) : (
         <div className={classes.actions}>
           <Message error={error} />
+          <div className={classes.paymentMethods}>
+            <RadioButton
+              label="Pay Online"
+              value="payNow"
+              isSelected={paymentMethod === 'payNow'}
+              onRadioChange={() => handlePaymentMethodChange('payNow')}
+              groupName="paymentMethod"
+            />
+            <RadioButton
+              label="Cash on Delivery"
+              value="cod"
+              isSelected={paymentMethod === 'cod'}
+              onRadioChange={() => handlePaymentMethodChange('cod')}
+              groupName="paymentMethod"
+            />
+          </div>
           <Button
             type="button"
-            className={classes.payNow}
-            onClick={handleSubmitCheckout}
-            disabled={isLoading || isCashOnDelivery}
-            label={isLoading ? 'Loading...' : 'Pay Now'}
+            label={isLoading ? 'Loading...' : 'Confirm Payment Method'}
+            disabled={isLoading || !paymentMethod}
+            onClick={
+              paymentMethod === 'payNow'
+                ? handleSubmitCheckout
+                : paymentMethod === 'cod'
+                ? handleCashOnDelivery
+                : undefined
+            }
             appearance="primary"
+            className={classes.submit}
           />
           <Button
             type="button"
-            className={classes.cod}
-            onClick={handleCashOnDelivery}
-            disabled={isLoading || isCashOnDelivery}
-            label={isCashOnDelivery ? 'Loading...' : 'Cash on Delivery'}
-            appearance="primary"
-          />
-          <Button
-            type="button"
-            className={classes.backToCart}
-            href="/cart"
+            label="Edit Details"
+            onClick={() => setDetailsConfirmed(false)}
             appearance="secondary"
-            label={'Back to Cart'}
+            className={classes.submit}
+          />
+          <Button
+            type="button"
+            label="Cancel"
+            onClick={() => router.push('/cart')}
+            appearance="secondary"
+            className={classes.submit}
           />
         </div>
       )}

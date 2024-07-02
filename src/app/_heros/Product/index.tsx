@@ -2,11 +2,11 @@
 
 import React, { Fragment, useState } from 'react'
 
-import { Category, Product } from '../../../payload/payload-types'
+import { Category, Media as MediaType, Product } from '../../../payload/payload-types'
 import { AddToCartButton } from '../../_components/AddToCartButton'
 import { Gutter } from '../../_components/Gutter'
-import { Media } from '../../_components/Media'
 import { Price } from '../../_components/Price'
+import Swiper from '../../_components/Swiper'
 import { useAuth } from '../../_providers/Auth'
 
 import classes from './index.module.scss'
@@ -37,19 +37,6 @@ const SizeOptions: React.FC<{
   )
 }
 
-const DotIndicator: React.FC<{ currentImageIndex: number }> = ({ currentImageIndex }) => {
-  return (
-    <div className={classes.dotContainer}>
-      {[0, 1].map(index => (
-        <div
-          key={index}
-          className={`${classes.dot} ${currentImageIndex === index ? classes.activeDot : ''}`}
-        />
-      ))}
-    </div>
-  )
-}
-
 export const ProductHero: React.FC<{
   product: Product
 }> = ({ product }) => {
@@ -67,42 +54,14 @@ export const ProductHero: React.FC<{
 
   const anySizesAvailable = TotalSizes.some((size: string) => AvailableSizes.includes(size))
 
-  // Add state for the current image
-  const [currentImage, setCurrentImage] = useState(metaImage)
-  const [isTransitioning, setIsTransitioning] = useState(false)
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
-
-  // Function to switch to the next image
-  const switchImage = () => {
-    setIsTransitioning(true)
-    setTimeout(() => {
-      if (currentImageIndex === 0) {
-        setCurrentImage(media)
-        setCurrentImageIndex(1)
-      } else {
-        setCurrentImage(metaImage)
-        setCurrentImageIndex(0)
-      }
-      setIsTransitioning(false)
-    }, 500) // Duration should match the transition time
-  }
+  const mediaItems: (string | MediaType)[] = [metaImage, media]
 
   const { user } = useAuth()
 
   return (
     <Gutter className={classes.productHero}>
-      <div className={classes.mediaWrapper} onClick={switchImage}>
-        {!currentImage && <div className={classes.placeholder}>No image</div>}
-        {currentImage && typeof currentImage !== 'string' && (
-          <Media
-            imgClassName={`${classes.image} ${
-              isTransitioning ? classes.imageHidden : classes.imageVisible
-            }`}
-            resource={currentImage}
-            fill
-          />
-        )}
-        <DotIndicator currentImageIndex={currentImageIndex} />
+      <div className={classes.mediaWrapper}>
+        <Swiper mediaItems={mediaItems} />
       </div>
 
       <div className={classes.details}>
@@ -160,7 +119,7 @@ export const ProductHero: React.FC<{
           <p className={classes.outOfStockMessage}>This item is currently out of stock</p>
         )}
 
-        {!user && <p className={classes.loginMessage}>Please log in to save your cart</p>}
+        {/* {!user && <p className={classes.loginMessage}>Please log in to save your cart</p>} */}
       </div>
     </Gutter>
   )

@@ -20,7 +20,7 @@ type CartAction =
   | {
       type: 'DELETE_ITEM'
       payload: Product
-      size: string
+      incomingSize: string
     }
   | {
       type: 'CLEAR_CART'
@@ -34,31 +34,35 @@ export const cartReducer = (cart: CartType, action: CartAction): CartType => {
 
     case 'MERGE_CART': {
       const { payload: incomingCart } = action
-      // console.log('Incoming cart:', incomingCart)
-      // console.log('cartitem 1 product:', incomingCart?.items[0].product)
-      // console.log('Existing cart:', cart)
-      // console.log('cartitem 1 product:', incomingCart?.items[0].product)
 
-      const mergedItems: CartItem[] = [...(cart?.items || []), ...(incomingCart?.items || [])]
+      const syncedItems: CartItem[] = [
+        ...(cart?.items || []),
+        ...(incomingCart?.items || []),
+      ].reduce((acc: CartItem[], item) => {
+        // remove duplicates
+        const productId = typeof item.product === 'string' ? item.product : item?.product?.id
 
-      const uniqueItems: CartItem[] = mergedItems.reduce((acc: CartItem[], item) => {
-        const duplicate = acc.find(
-          accItem => accItem.size === item.size && accItem.product?.id === item.product?.id,
-        )
+        const indexInAcc = acc.findIndex(
+          ({ product, size }) =>
+            (typeof product === 'string' ? product === productId : product?.id === productId) &&
+            size === item.size,
+        ) // eslint-disable-line function-paren-newline
 
-        if (!duplicate) {
-          return [...acc, item]
+        if (indexInAcc > -1) {
+          acc[indexInAcc] = {
+            ...acc[indexInAcc],
+            // customize the merge logic here, e.g.:
+            quantity: acc[indexInAcc].quantity,
+          }
+        } else {
+          acc.push(item)
         }
-
         return acc
       }, [])
 
-      // console.log('Unique cart:', uniqueItems)
-      // console.log('cartitem 1 product:', incomingCart?.items[0].product)
-
       return {
         ...cart,
-        items: uniqueItems,
+        items: syncedItems,
       }
     }
 
@@ -84,7 +88,6 @@ export const cartReducer = (cart: CartType, action: CartAction): CartType => {
         withAddedItem[indexInCart] = {
           ...withAddedItem[indexInCart],
           quantity: (incomingItem.quantity || 0) > 0 ? incomingItem.quantity : undefined,
-          size: incomingItem.size,
         }
       }
 
@@ -95,7 +98,7 @@ export const cartReducer = (cart: CartType, action: CartAction): CartType => {
     }
 
     case 'DELETE_ITEM': {
-      const { payload: incomingProduct, size: incomingSize } = action
+      const { payload: incomingProduct, incomingSize: incomingSize } = action
       const withDeletedItem = { ...cart }
 
       const indexInCart = cart?.items?.findIndex(

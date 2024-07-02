@@ -18,7 +18,7 @@
   margin: 0 auto; // center the wrapper
   padding-bottom: 150%; // for a 1080:720 ratio
   margin: 0 auto;
-
+  height: 0px;
   @include small-break {
     width: 100%;
     height: calc(width * 1.5);
@@ -37,12 +37,10 @@
 
 .imageVisible {
   opacity: 1;
-  transition: opacity 0.5s ease-in-out;
 }
 
 .imageHidden {
   opacity: 0;
-  transition: opacity 0.5s ease-in-out;
 }
 
 .details {
@@ -75,74 +73,67 @@
   padding: 30px 0;
 }
 
+.sizeOptions {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
 
-  .sizeOptions {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
+.sizeOption {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+  font-weight: 500;
+
+  @include small-break {
+    margin-bottom: 10px;
   }
+}
 
-  .sizeOption {
-    padding: 10px 20px;
-    border: 1px solid #ccc;
-    cursor: pointer;
-    transition: ease-in-out 0.2s;
-    font-weight: 500; // Slightly bold text
+.sizeOption.selected {
+  background-color: var(--color-dark-500);
+  color: white;
+  border-color: var(--color-dark-500); 
+}
 
-    @include small-break {
-      margin-bottom: 10px;
-    }
-  }
+.sizeOption.unselectable {
+  color: #ccc;
+  cursor: not-allowed;
+}
 
-  // .sizeOption:hover {
-  //   background-color: var(--color-gray-500);
-  // }
+.outOfStockMessage, .selectSizeMessage {
+  color: var(--theme-warning-700);
+  font-size: 18px;
+  margin-top: 6px;
+  font-weight: 600;
+  text-align: center;
+  border: 2px solid var(--theme-warning-700);
+  padding: 8px;
+  border-radius: 5px;
+}
 
-  .sizeOption.selected {
-    background-color: var(--color-dark-500);
-    color: white;
-    border-color: var(--color-dark-500); 
-  }
+.dotContainer {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+}
 
-  .sizeOption.unselectable {
-    color: #ccc;
-    cursor: not-allowed;
-  }
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ddd;
+  transition: background-color 0.3s ease;
+}
 
-
-  .outOfStockMessage, .selectSizeMessage {
-    color: var(--theme-warning-700);
-    font-size: 18px;
-    margin-top: 6px;
-    font-weight: 600;
-    text-align: center;
-    border: 2px solid var(--theme-warning-700);
-    padding: 8px;
-    border-radius: 5px;
-  }
-
-  .dotContainer {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 5px;
-  }
-  
-  .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #ddd;
-    transition: background-color 0.3s ease;
-  }
-  
-  .activeDot {
-    background-color: #333;
-  }
-
+.activeDot {
+  background-color: #333;
+}
 
 .sizeChartLink {
   color: #0070f3;

@@ -3,7 +3,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { Order } from '../../../../../payload/payload-types'
+import type { Order } from '../../../../../payload/payload-types'
 import { HR } from '../../../../_components/HR'
 import { Media } from '../../../../_components/Media'
 import { Price } from '../../../../_components/Price'
