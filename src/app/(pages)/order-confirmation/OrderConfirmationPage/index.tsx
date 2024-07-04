@@ -37,19 +37,33 @@ export const OrderConfirmationPage: React.FC<{}> = () => {
           return
         }
 
-        if (orderData.stripePaymentIntentID === 'Cash On Delivery') {
+        if (
+          orderData.stripePaymentIntentID === 'Cash On Delivery' ||
+          orderData.stripePaymentIntentID === 'PAID' ||
+          status === 'PAID'
+        ) {
           // If payment method is Cash On Delivery, directly set status as PAID
           setStatus('PAID')
-          clearCart()
         } else {
           // Otherwise, check payment status with Cashfree
           const response = await fetch(`/api/get-order/${orderID}`)
           const data = await response.json()
 
+          // console.log(data)
           if (response.ok) {
+            const paymentstatus = await fetch(`/api/get-payments-for-order/${orderID}`)
+            const dat = await paymentstatus.json()
+            const successfulPayment = dat.find(payment => payment.payment_status === 'SUCCESS')
+            let discountPercentage = 0
+            if (successfulPayment) {
+              const { order_amount, payment_amount } = successfulPayment
+              discountPercentage = Math.round(
+                ((order_amount - payment_amount) / order_amount) * 100,
+              )
+            }
             setStatus(data.order_status)
             if (data.order_status === 'PAID') {
-              // Update order status to 'PAID' in your system
+              // Update order status to 'PAID' & discount
               await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/${orderID}`, {
                 method: 'PATCH',
                 headers: {
@@ -57,6 +71,7 @@ export const OrderConfirmationPage: React.FC<{}> = () => {
                 },
                 body: JSON.stringify({
                   stripePaymentIntentID: 'PAID',
+                  discount: discountPercentage,
                 }),
               })
               setStatus('PAID')

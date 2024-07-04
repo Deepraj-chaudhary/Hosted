@@ -7,7 +7,6 @@ import { AddToCartButton } from '../../_components/AddToCartButton'
 import { Gutter } from '../../_components/Gutter'
 import { Price } from '../../_components/Price'
 import Swiper from '../../_components/Swiper'
-import { useAuth } from '../../_providers/Auth'
 
 import classes from './index.module.scss'
 
@@ -46,6 +45,7 @@ export const ProductHero: React.FC<{
     moreSizes,
     media,
     meta: { image: metaImage, description } = {},
+    layout,
   } = product
 
   const [size, setSize] = useState('null') // assuming sizes are in an array
@@ -54,9 +54,8 @@ export const ProductHero: React.FC<{
 
   const anySizesAvailable = TotalSizes.some((size: string) => AvailableSizes.includes(size))
 
-  const mediaItems: (string | MediaType)[] = [metaImage, media]
-
-  const { user } = useAuth()
+  const mediaItemsFromLayout = layout.map(item => item.media)
+  const mediaItems: (string | MediaType)[] = [metaImage, media, ...mediaItemsFromLayout]
 
   return (
     <Gutter className={classes.productHero}>
@@ -118,8 +117,6 @@ export const ProductHero: React.FC<{
         ) : (
           <p className={classes.outOfStockMessage}>This item is currently out of stock</p>
         )}
-
-        {/* {!user && <p className={classes.loginMessage}>Please log in to save your cart</p>} */}
       </div>
     </Gutter>
   )

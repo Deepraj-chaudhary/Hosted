@@ -50,7 +50,7 @@ export const generateOrderPDF = async (order: Order): Promise<Uint8Array> => {
     99: 'OTHER COUNTRY',
   }
 
-  const fontSize = 12
+  const fontSize = 10
   const margin = 30
   let yOffset = pageHeight - margin
 
@@ -175,7 +175,6 @@ export const generateOrderPDF = async (order: Order): Promise<Uint8Array> => {
   // Draw line after billing/shipping address
   yOffset -= billingAddress.length * 15 + 10
   drawHorizontalLine(yOffset)
-
   // Product Details
   yOffset -= 20
   firstPage.drawText('Product Details:', {
@@ -192,12 +191,13 @@ export const generateOrderPDF = async (order: Order): Promise<Uint8Array> => {
     'QN',
     'Size',
     'Price/unit',
+    'Discount',
     'CGST',
     'SGST',
     'IGST',
     'Total/unit',
   ]
-  const columnXPositions = [margin, 170, 210, 250, 310, 380, 450, 510]
+  const columnXPositions = [margin, 150, 180, 210, 270, 330, 390, 460, 510]
 
   // Draw table headers
   tableHeaders.forEach((header, index) => {
@@ -217,14 +217,17 @@ export const generateOrderPDF = async (order: Order): Promise<Uint8Array> => {
   yOffset -= 15
   order.items.forEach((item, itemIndex) => {
     const isDelhi = typeof order.orderedBy === 'object' && order.orderedBy.state === '7'
+    const discountPercentage = order.discount ? order.discount : 0
+    const discountFactor = 1 - discountPercentage / 100
+    const discountedPrice = item.price ? item.price * discountFactor : 0
     const pricePerUnit = item.price ? (item.price / 100 / 1.05).toFixed(2) : 'N/A'
-    const cgst = isDelhi ? ((item.price / 100 / 1.05) * 0.025).toFixed(2) + ' @2.5%' : '0.00'
-    const sgst = isDelhi ? ((item.price / 100 / 1.05) * 0.025).toFixed(2) + ' @2.5%' : '0.00'
-    const igst = !isDelhi ? ((item.price / 100 / 1.05) * 0.05).toFixed(2) + ' @5%' : '0.00'
-    const totalPricePerUnit = item.price ? (item.price / 100).toFixed(2) : 'N/A'
+    const cgst = isDelhi ? ((discountedPrice / 100 / 1.05) * 0.025).toFixed(2) + ' @2.5%' : '0.00'
+    const sgst = isDelhi ? ((discountedPrice / 100 / 1.05) * 0.025).toFixed(2) + ' @2.5%' : '0.00'
+    const igst = !isDelhi ? ((discountedPrice / 100 / 1.05) * 0.05).toFixed(2) + ' @5%' : '0.00'
+    const totalPricePerUnit = discountedPrice ? (discountedPrice / 100).toFixed(2) : 'N/A'
 
     // Adjusted font size for product title
-    const productFontSize = 10
+    const productFontSize = fontSize - 2
     const productTitle = typeof item.product === 'object' ? item.product.title : 'N/A'
 
     // Function to break text into two lines if too long
@@ -252,7 +255,7 @@ export const generateOrderPDF = async (order: Order): Promise<Uint8Array> => {
     firstPage.drawText(line1, {
       x: columnXPositions[0],
       y: currentYOffset,
-      size: productFontSize - 4,
+      size: productFontSize - 2,
       font: helveticaFont,
       color: rgb(0, 0, 0),
     })
@@ -263,7 +266,7 @@ export const generateOrderPDF = async (order: Order): Promise<Uint8Array> => {
       firstPage.drawText(line2, {
         x: columnXPositions[0],
         y: currentYOffset,
-        size: productFontSize - 4,
+        size: productFontSize - 2,
         font: helveticaFont,
         color: rgb(0, 0, 0),
       })
@@ -277,6 +280,7 @@ export const generateOrderPDF = async (order: Order): Promise<Uint8Array> => {
       `${item.quantity ?? 'N/A'}`,
       `${item.size ? item.size : 'N/A'}`,
       `${pricePerUnit}`,
+      `${discountPercentage.toFixed(2)}%`,
       `${cgst}`,
       `${sgst}`,
       `${igst}`,
@@ -298,7 +302,6 @@ export const generateOrderPDF = async (order: Order): Promise<Uint8Array> => {
   yOffset -= order.items.length * 20
 
   // Draw line after product details
-  // yOffset -= 20;
   drawHorizontalLine(yOffset)
 
   // Total Price
@@ -311,9 +314,11 @@ export const generateOrderPDF = async (order: Order): Promise<Uint8Array> => {
     color: rgb(0, 0, 0),
   })
 
-  const totalPrice = order.total ? (order.total / 100).toFixed(2) + ' INR' : 'N/A'
+  const totalPrice = order.total
+    ? ((order.total / 100) * (1 - order.discount / 100)).toFixed(2) + ' INR'
+    : 'N/A'
   firstPage.drawText(totalPrice, {
-    x: columnXPositions[7],
+    x: columnXPositions[8],
     y: yOffset,
     size: fontSize - 2,
     font: helveticaBoldFont,

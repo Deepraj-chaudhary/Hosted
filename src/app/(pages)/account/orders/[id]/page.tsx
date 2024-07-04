@@ -55,11 +55,11 @@ export default async function Order({ params: { id } }) {
         <p>{`Payment Intent: ${order.stripePaymentIntentID}`}</p>
         <p>{`Ordered On: ${formatDateTime(order.createdAt)}`}</p>
         <p className={classes.total}>
-          {'Total: '}
+          {'Total (after discount): '}
           {new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'inr',
-          }).format(order.total / 100)}
+          }).format((order.total * (100 - order.discount)) / 10000)}
         </p>
       </div>
 

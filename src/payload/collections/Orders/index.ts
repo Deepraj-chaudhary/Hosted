@@ -96,6 +96,16 @@ export const Orders: CollectionConfig = {
       },
     },
     {
+      name: 'discount',
+      label: 'Discount (%)',
+      type: 'number',
+      min: 0,
+      defaultValue: 0,
+      access: {
+        update: admins,
+      },
+    },
+    {
       name: 'items',
       type: 'array',
       fields: [

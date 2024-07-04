@@ -5552,6 +5552,7 @@ type Order {
   orderedBy: User
   stripePaymentIntentID: String
   total: Float!
+  discount: Float
   items: [Order_Items!]
   refund: Order_refund
   refundMessage: String
@@ -5679,6 +5680,7 @@ input Order_where {
   orderedBy: Order_orderedBy_operator
   stripePaymentIntentID: Order_stripePaymentIntentID_operator
   total: Order_total_operator
+  discount: Order_discount_operator
   items__product: Order_items__product_operator
   items__price: Order_items__price_operator
   items__quantity: Order_items__quantity_operator
@@ -5720,6 +5722,16 @@ input Order_total_operator {
   greater_than: Float
   less_than_equal: Float
   less_than: Float
+}
+
+input Order_discount_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
 }
 
 input Order_items__product_operator {
@@ -5835,6 +5847,7 @@ input Order_where_and {
   orderedBy: Order_orderedBy_operator
   stripePaymentIntentID: Order_stripePaymentIntentID_operator
   total: Order_total_operator
+  discount: Order_discount_operator
   items__product: Order_items__product_operator
   items__price: Order_items__price_operator
   items__quantity: Order_items__quantity_operator
@@ -5853,6 +5866,7 @@ input Order_where_or {
   orderedBy: Order_orderedBy_operator
   stripePaymentIntentID: Order_stripePaymentIntentID_operator
   total: Order_total_operator
+  discount: Order_discount_operator
   items__product: Order_items__product_operator
   items__price: Order_items__price_operator
   items__quantity: Order_items__quantity_operator
@@ -5883,6 +5897,7 @@ type OrdersDocAccessFields {
   orderedBy: OrdersDocAccessFields_orderedBy
   stripePaymentIntentID: OrdersDocAccessFields_stripePaymentIntentID
   total: OrdersDocAccessFields_total
+  discount: OrdersDocAccessFields_discount
   items: OrdersDocAccessFields_items
   refund: OrdersDocAccessFields_refund
   refundMessage: OrdersDocAccessFields_refundMessage
@@ -5956,6 +5971,29 @@ type OrdersDocAccessFields_total_Update {
 }
 
 type OrdersDocAccessFields_total_Delete {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_discount {
+  create: OrdersDocAccessFields_discount_Create
+  read: OrdersDocAccessFields_discount_Read
+  update: OrdersDocAccessFields_discount_Update
+  delete: OrdersDocAccessFields_discount_Delete
+}
+
+type OrdersDocAccessFields_discount_Create {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_discount_Read {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_discount_Update {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_discount_Delete {
   permission: Boolean!
 }
 
@@ -11030,6 +11068,7 @@ type OrdersFields {
   orderedBy: OrdersFields_orderedBy
   stripePaymentIntentID: OrdersFields_stripePaymentIntentID
   total: OrdersFields_total
+  discount: OrdersFields_discount
   items: OrdersFields_items
   refund: OrdersFields_refund
   refundMessage: OrdersFields_refundMessage
@@ -11103,6 +11142,29 @@ type OrdersFields_total_Update {
 }
 
 type OrdersFields_total_Delete {
+  permission: Boolean!
+}
+
+type OrdersFields_discount {
+  create: OrdersFields_discount_Create
+  read: OrdersFields_discount_Read
+  update: OrdersFields_discount_Update
+  delete: OrdersFields_discount_Delete
+}
+
+type OrdersFields_discount_Create {
+  permission: Boolean!
+}
+
+type OrdersFields_discount_Read {
+  permission: Boolean!
+}
+
+type OrdersFields_discount_Update {
+  permission: Boolean!
+}
+
+type OrdersFields_discount_Delete {
   permission: Boolean!
 }
 
@@ -13790,6 +13852,7 @@ input mutationOrderInput {
   orderedBy: String
   stripePaymentIntentID: String
   total: Float!
+  discount: Float
   items: [mutationOrder_ItemsInput]
   refund: Order_refund_MutationInput
   refundMessage: String
@@ -13816,6 +13879,7 @@ input mutationOrderUpdateInput {
   orderedBy: String
   stripePaymentIntentID: String
   total: Float
+  discount: Float
   items: [mutationOrderUpdate_ItemsInput]
   refund: OrderUpdate_refund_MutationInput
   refundMessage: String

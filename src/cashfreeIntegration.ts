@@ -62,6 +62,17 @@ export const getOrder = async (orderId: string): Promise<any> => {
   }
 }
 
+export const getPaymentsForOrder = async (orderId: string): Promise<any> => {
+  try {
+    const response = await Cashfree.PGOrderFetchPayments('2023-08-01', orderId)
+    return response.data
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error('Failed to fetch payment details for order')
+    }
+  }
+}
+
 // export const validateWebhook = (req: {headers: any, rawBody: any}): boolean => {
 //   try {
 //     Cashfree.PGVerifyWebhookSignature(

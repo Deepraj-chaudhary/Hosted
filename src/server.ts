@@ -7,7 +7,7 @@ import nextBuild from 'next/dist/build'
 import path from 'path'
 import payload from 'payload'
 
-import { createOrder, getOrder } from './cashfreeIntegration'
+import { createOrder, getOrder, getPaymentsForOrder } from './cashfreeIntegration'
 import { seed } from './payload/seed'
 
 dotenv.config({
@@ -98,6 +98,18 @@ const start = async (): Promise<void> => {
     try {
       const order = await getOrder(req.params.orderId)
       res.status(200).json(order)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        res.status(500).json({ message: error.message })
+      }
+    }
+  })
+
+  // Endpoint to get payment details for an order
+  app.get('/api/get-payments-for-order/:orderId', async (req, res) => {
+    try {
+      const payments = await getPaymentsForOrder(req.params.orderId)
+      res.status(200).json(payments)
     } catch (error: unknown) {
       if (error instanceof Error) {
         res.status(500).json({ message: error.message })

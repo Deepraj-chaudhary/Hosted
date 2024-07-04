@@ -428,6 +428,7 @@ export interface Order {
   orderedBy?: (string | null) | User;
   stripePaymentIntentID?: string | null;
   total: number;
+  discount?: number | null;
   items?:
     | {
         product: string | Product;
