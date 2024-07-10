@@ -18,6 +18,13 @@
   font-weight: 600;
 }
 
+.reconfirmLink {
+  margin-top: 8px;
+  color: var(--theme-primary-500);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .row {
   display: flex;
   align-items: center;
@@ -125,3 +132,41 @@
   .submit {
     align-self: flex-start;
   }
+
+/* New styles for delivery section */
+
+.copyButton {
+  background-color: var(--theme-primary-500);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.deliverySection {
+  margin-top: 24px;
+  padding: 16px;
+  background-color: var(--color-light-50);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.deliveryStatus {
+  font-weight: bold;
+}
+
+.referenceNumber {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  gap: 8px; /* Space between reference number and icon */
+}
+
+.trackingLink {
+  color: var(--theme-primary-500);
+  text-decoration: underline;
+  cursor: pointer;
+}
+

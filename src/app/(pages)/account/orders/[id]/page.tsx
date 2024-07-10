@@ -4,13 +4,14 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import type { Order } from '../../../../../payload/payload-types'
+import CopyToClipboardIcon from '../../../../_components/CopyToClipboardIcon'
 import { HR } from '../../../../_components/HR'
 import { Media } from '../../../../_components/Media'
 import { Price } from '../../../../_components/Price'
 import { formatDateTime } from '../../../../_utilities/formatDateTime'
 import { getMeUser } from '../../../../_utilities/getMeUser'
 import { mergeOpenGraph } from '../../../../_utilities/mergeOpenGraph'
-import UpdateRefundStatusForm from './UpdateRefundStatusForm' // Import the form component
+import UpdateRefundStatusForm from './UpdateRefundStatusForm'
 
 import classes from './index.module.scss'
 
@@ -44,6 +45,39 @@ export default async function Order({ params: { id } }) {
     notFound()
   }
 
+  // Fetch delivery status
+  let deliveryStatus = null
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/track-delivery`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `JWT ${token}`,
+      },
+      body: JSON.stringify({
+        trkType: 'cnno',
+        strcnno: order.reference_number,
+        addtnlDtl: 'N',
+      }),
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch delivery status')
+    }
+
+    const json = await response.json()
+    const status = json.trackHeader?.strStatus
+
+    if ('error' in json && json.error) {
+      throw new Error('Error in response')
+    }
+    if ('errors' in json && json.errors) {
+      throw new Error('Errors in response')
+    }
+
+    deliveryStatus = status
+  } catch (error) {}
+
   return (
     <div>
       <h5>
@@ -61,6 +95,12 @@ export default async function Order({ params: { id } }) {
             currency: 'inr',
           }).format((order.total * (100 - order.discount)) / 10000)}
         </p>
+        {order.stripePaymentIntentID === 'PAID' ||
+        order.stripePaymentIntentID === 'Cash On Delivery' ? (
+          <Link href={`/order-confirmation?order_id=${order.id}`} className={classes.reconfirmLink}>
+            Reconfirm Order
+          </Link>
+        ) : null}
       </div>
 
       <div className={classes.order}>
@@ -120,22 +160,49 @@ export default async function Order({ params: { id } }) {
       </div>
       <HR className={classes.hr} />
 
-      {/* Conditionally render the refund status or the form */}
-      <div className={classes.refundSection}>
-        {order.refund === 'Failed' ? (
-          <div className={classes.refundStatus}>
-            <p>{`Refund Status: ${order.refund}`}</p>
-            {order.refundMessage && <p>{`Failure reason: ${order.refundMessage}`}</p>}
+      {order.stripePaymentIntentID === 'PAID' ||
+      order.stripePaymentIntentID === 'Cash On Delivery' ? (
+        <>
+          {/* Delivery status and reference number */}
+          {order.reference_number && (
+            <div className={classes.deliverySection}>
+              <p className={classes.deliveryStatus}>
+                {'Delivery Status: '}
+                {deliveryStatus ? deliveryStatus : 'Not available'}
+              </p>
+              <div className={classes.referenceNumber}>
+                <span>{'Consignment Number: '}</span>
+                <span>{order.reference_number}</span>
+                <CopyToClipboardIcon text={order.reference_number} />
+              </div>
+              <Link
+                href={`https://www.dtdc.in/tracking/shipment-tracking.asp?refNo=${order.reference_number}`}
+                target="_blank"
+                className={classes.trackingLink}
+              >
+                Track Your Order
+              </Link>
+            </div>
+          )}
+
+          {/* Conditionally render the refund status or the form */}
+          <div className={classes.refundSection}>
+            {order.refund === 'Failed' ? (
+              <div className={classes.refundStatus}>
+                <p>{`Refund Status: ${order.refund}`}</p>
+                {order.refundMessage && <p>{`Failure reason: ${order.refundMessage}`}</p>}
+              </div>
+            ) : order.refund === 'refund' ? (
+              <UpdateRefundStatusForm orderId={order.id} token={token} />
+            ) : (
+              <div className={classes.refundStatus}>
+                <p>{`Refund Status: ${order.refund}`}</p>
+                {order.refundMessage && <p>{`Refund reason: ${order.refundMessage}`}</p>}
+              </div>
+            )}
           </div>
-        ) : order.refund === 'refund' ? (
-          <UpdateRefundStatusForm orderId={order.id} token={token} />
-        ) : (
-          <div className={classes.refundStatus}>
-            <p>{`Refund Status: ${order.refund}`}</p>
-            {order.refundMessage && <p>{`Refund reason: ${order.refundMessage}`}</p>}
-          </div>
-        )}
-      </div>
+        </>
+      ) : null}
     </div>
   )
 }

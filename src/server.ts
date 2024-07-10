@@ -117,6 +117,75 @@ const start = async (): Promise<void> => {
     }
   })
 
+  // Endpoint to create DTDC order
+  app.post('/api/create-dtdc-order', async (req, res) => {
+    try {
+      const api = process.env.DTDC_API_KEY
+      const response = await fetch(
+        'https://dtdcapi.shipsy.io/api/customer/integration/consignment/softdata',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'api-key': api,
+          },
+          body: JSON.stringify(req.body),
+        },
+      )
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+
+      res.status(200).json(data)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        res.status(500).json({ message: error.message })
+      } else {
+        res.status(500).json({ message: 'Unknown error' })
+      }
+    }
+  })
+
+  // Endpoint to track delivery status
+  app.post('/api/track-delivery', async (req, res) => {
+    try {
+      const { trkType, strcnno, addtnlDtl } = req.body
+      const token = process.env.DTDC_X_ACCESS_TOKEN
+
+      const response = await fetch(
+        `https://blktracksvc.dtdc.com/dtdc-api/rest/JSONCnTrk/getTrackDetails`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Access-Token': token,
+          },
+          body: JSON.stringify({
+            trkType,
+            strcnno,
+            addtnlDtl,
+          }),
+        },
+      )
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      res.status(200).json(data)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        res.status(500).json({ message: error.message })
+      } else {
+        res.status(500).json({ message: 'Unknown error' })
+      }
+    }
+  })
+
   // Webhook endpoint
   // app.post('/api/webhook', (req, res) => {
   //   if (validateWebhook(req)) {

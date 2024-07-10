@@ -429,6 +429,7 @@ export interface Order {
   stripePaymentIntentID?: string | null;
   total: number;
   discount?: number | null;
+  reference_number?: string | null;
   items?:
     | {
         product: string | Product;

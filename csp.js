@@ -26,6 +26,7 @@ const policies = {
     'https://api.stripe.com',
     'https://maps.googleapis.com',
     'https://api.cashfree.com', // Added Cashfree API
+    'http://demodashboard.shipsy.in', // Added DTDC API
   ],
 }
 

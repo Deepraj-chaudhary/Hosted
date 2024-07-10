@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { useForm, UseFormRegister } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 
@@ -32,6 +32,7 @@ const CheckoutForm: React.FC<{}> = () => {
   const [isLoading, setIsLoading] = React.useState(false)
   const [detailsConfirmed, setDetailsConfirmed] = React.useState(false)
   const [paymentMethod, setPaymentMethod] = React.useState<'payNow' | 'cod'>('payNow')
+  const isSubmitting = useRef(false)
   const router = useRouter()
   const { cart, cartTotal } = useCart()
   const { user, setUser } = useAuth()
@@ -70,6 +71,9 @@ const CheckoutForm: React.FC<{}> = () => {
   }, [user, reset])
 
   const handleFormSubmit = async (data: FormData) => {
+    if (isSubmitting.current) return // Prevent duplicate submissions
+    isSubmitting.current = true
+
     if (user) {
       setIsLoading(true)
       const userData = {
@@ -101,11 +105,15 @@ const CheckoutForm: React.FC<{}> = () => {
       } catch (err) {
         setError(`Error updating account: ${err instanceof Error ? err.message : 'Unknown error'}`)
         setIsLoading(false)
+      } finally {
+        isSubmitting.current = false
       }
     }
   }
 
   const handleSubmitCheckout = useCallback(async () => {
+    if (isSubmitting.current) return // Prevent duplicate submissions
+    isSubmitting.current = true
     setIsLoading(true)
 
     try {
@@ -178,10 +186,13 @@ const CheckoutForm: React.FC<{}> = () => {
       setError(`Error while submitting payment: ${msg}`)
     } finally {
       setIsLoading(false)
+      isSubmitting.current = false
     }
   }, [router, cart, cartTotal, user])
 
   const handleCashOnDelivery = useCallback(async () => {
+    if (isSubmitting.current) return // Prevent duplicate submissions
+    isSubmitting.current = true
     setIsLoading(true)
 
     try {
@@ -218,6 +229,7 @@ const CheckoutForm: React.FC<{}> = () => {
       setError(`Error while creating order: ${msg}`)
     } finally {
       setIsLoading(false)
+      isSubmitting.current = false
     }
   }, [router, cart, cartTotal])
 

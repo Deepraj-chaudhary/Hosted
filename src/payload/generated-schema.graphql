@@ -5553,6 +5553,7 @@ type Order {
   stripePaymentIntentID: String
   total: Float!
   discount: Float
+  reference_number: String
   items: [Order_Items!]
   refund: Order_refund
   refundMessage: String
@@ -5681,6 +5682,7 @@ input Order_where {
   stripePaymentIntentID: Order_stripePaymentIntentID_operator
   total: Order_total_operator
   discount: Order_discount_operator
+  reference_number: Order_reference_number_operator
   items__product: Order_items__product_operator
   items__price: Order_items__price_operator
   items__quantity: Order_items__quantity_operator
@@ -5731,6 +5733,17 @@ input Order_discount_operator {
   greater_than: Float
   less_than_equal: Float
   less_than: Float
+  exists: Boolean
+}
+
+input Order_reference_number_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
   exists: Boolean
 }
 
@@ -5848,6 +5861,7 @@ input Order_where_and {
   stripePaymentIntentID: Order_stripePaymentIntentID_operator
   total: Order_total_operator
   discount: Order_discount_operator
+  reference_number: Order_reference_number_operator
   items__product: Order_items__product_operator
   items__price: Order_items__price_operator
   items__quantity: Order_items__quantity_operator
@@ -5867,6 +5881,7 @@ input Order_where_or {
   stripePaymentIntentID: Order_stripePaymentIntentID_operator
   total: Order_total_operator
   discount: Order_discount_operator
+  reference_number: Order_reference_number_operator
   items__product: Order_items__product_operator
   items__price: Order_items__price_operator
   items__quantity: Order_items__quantity_operator
@@ -5898,6 +5913,7 @@ type OrdersDocAccessFields {
   stripePaymentIntentID: OrdersDocAccessFields_stripePaymentIntentID
   total: OrdersDocAccessFields_total
   discount: OrdersDocAccessFields_discount
+  reference_number: OrdersDocAccessFields_reference_number
   items: OrdersDocAccessFields_items
   refund: OrdersDocAccessFields_refund
   refundMessage: OrdersDocAccessFields_refundMessage
@@ -5994,6 +6010,29 @@ type OrdersDocAccessFields_discount_Update {
 }
 
 type OrdersDocAccessFields_discount_Delete {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_reference_number {
+  create: OrdersDocAccessFields_reference_number_Create
+  read: OrdersDocAccessFields_reference_number_Read
+  update: OrdersDocAccessFields_reference_number_Update
+  delete: OrdersDocAccessFields_reference_number_Delete
+}
+
+type OrdersDocAccessFields_reference_number_Create {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_reference_number_Read {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_reference_number_Update {
+  permission: Boolean!
+}
+
+type OrdersDocAccessFields_reference_number_Delete {
   permission: Boolean!
 }
 
@@ -11069,6 +11108,7 @@ type OrdersFields {
   stripePaymentIntentID: OrdersFields_stripePaymentIntentID
   total: OrdersFields_total
   discount: OrdersFields_discount
+  reference_number: OrdersFields_reference_number
   items: OrdersFields_items
   refund: OrdersFields_refund
   refundMessage: OrdersFields_refundMessage
@@ -11165,6 +11205,29 @@ type OrdersFields_discount_Update {
 }
 
 type OrdersFields_discount_Delete {
+  permission: Boolean!
+}
+
+type OrdersFields_reference_number {
+  create: OrdersFields_reference_number_Create
+  read: OrdersFields_reference_number_Read
+  update: OrdersFields_reference_number_Update
+  delete: OrdersFields_reference_number_Delete
+}
+
+type OrdersFields_reference_number_Create {
+  permission: Boolean!
+}
+
+type OrdersFields_reference_number_Read {
+  permission: Boolean!
+}
+
+type OrdersFields_reference_number_Update {
+  permission: Boolean!
+}
+
+type OrdersFields_reference_number_Delete {
   permission: Boolean!
 }
 
@@ -13853,6 +13916,7 @@ input mutationOrderInput {
   stripePaymentIntentID: String
   total: Float!
   discount: Float
+  reference_number: String
   items: [mutationOrder_ItemsInput]
   refund: Order_refund_MutationInput
   refundMessage: String
@@ -13880,6 +13944,7 @@ input mutationOrderUpdateInput {
   stripePaymentIntentID: String
   total: Float
   discount: Float
+  reference_number: String
   items: [mutationOrderUpdate_ItemsInput]
   refund: OrderUpdate_refund_MutationInput
   refundMessage: String

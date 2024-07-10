@@ -54,8 +54,12 @@ export const ProductHero: React.FC<{
 
   const anySizesAvailable = TotalSizes.some((size: string) => AvailableSizes.includes(size))
 
-  const mediaItemsFromLayout = layout.map(item => item.media)
-  const mediaItems: (string | MediaType)[] = [metaImage, media, ...mediaItemsFromLayout]
+  const mediaItemsFromLayout = layout.map(item => item.media || '')
+  const mediaItems: (string | MediaType)[] = [
+    metaImage,
+    ...(media ? [media] : []),
+    ...mediaItemsFromLayout,
+  ]
 
   return (
     <Gutter className={classes.productHero}>

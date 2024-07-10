@@ -22,7 +22,7 @@ export const Orders: CollectionConfig = {
       // New Hook to Send Order Confirmation Email with PDF
       async ({ doc, operation, req }) => {
         if (
-          (operation === 'update' || operation === 'create') &&
+          operation === 'update' &&
           (doc?.stripePaymentIntentID === 'PAID' ||
             doc?.stripePaymentIntentID === 'Cash On Delivery') &&
           doc?.refund === 'refund'
@@ -101,8 +101,13 @@ export const Orders: CollectionConfig = {
       type: 'number',
       min: 0,
       defaultValue: 0,
-      access: {
-        update: admins,
+    },
+    {
+      name: 'reference_number',
+      label: 'DTDC Reference Number',
+      type: 'text',
+      admin: {
+        position: 'sidebar',
       },
     },
     {
