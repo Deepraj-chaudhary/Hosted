@@ -6,8 +6,9 @@ import { Product } from '../../../payload/payload-types'
 
 import classes from './index.module.scss'
 
-export const priceFromJSON = (priceJSON: string, quantity: number = 1, raw?: boolean): string => {
-  let price = ''
+export const priceFromJSON = (priceJSON: string, quantity: number = 1, raw?: boolean): { originalPrice: string, modifiedPrice: string } => {
+  let originalPrice = ''
+  let modifiedPrice = ''
 
   if (priceJSON) {
     try {
@@ -15,15 +16,25 @@ export const priceFromJSON = (priceJSON: string, quantity: number = 1, raw?: boo
       const priceValue = parsed.unit_amount * quantity
       const priceType = parsed.type
 
-      if (raw) return priceValue.toString()
+      if (raw) return { originalPrice: priceValue.toString(), modifiedPrice: (priceValue + 100).toString() }
 
-      price = (priceValue / 100).toLocaleString('en-US', {
+      originalPrice = (priceValue / 100).toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'INR', // TODO: use `parsed.currency`
+      })
+
+      modifiedPrice = ((priceValue + 10000) / 100).toLocaleString('en-US', {
         style: 'currency',
         currency: 'INR', // TODO: use `parsed.currency`
       })
 
       if (priceType === 'recurring') {
-        price += `/${
+        originalPrice += `/${
+          parsed.recurring.interval_count > 1
+            ? `${parsed.recurring.interval_count} ${parsed.recurring.interval}`
+            : parsed.recurring.interval
+        }`
+        modifiedPrice += `/${
           parsed.recurring.interval_count > 1
             ? `${parsed.recurring.interval_count} ${parsed.recurring.interval}`
             : parsed.recurring.interval
@@ -34,7 +45,7 @@ export const priceFromJSON = (priceJSON: string, quantity: number = 1, raw?: boo
     }
   }
 
-  return price
+  return { originalPrice, modifiedPrice }
 }
 
 export const Price: React.FC<{
@@ -46,27 +57,22 @@ export const Price: React.FC<{
   const { product, product: { priceJSON } = {}, button = 'addToCart', quantity, size } = props
 
   const [price, setPrice] = useState<{
-    actualPrice: string
-    withQuantity: string
-  }>(() => ({
-    actualPrice: priceFromJSON(priceJSON),
-    withQuantity: priceFromJSON(priceJSON, quantity),
-  }))
+    originalPrice: string
+    modifiedPrice: string
+  }>(() => priceFromJSON(priceJSON, quantity))
 
   useEffect(() => {
-    setPrice({
-      actualPrice: priceFromJSON(priceJSON),
-      withQuantity: priceFromJSON(priceJSON, quantity),
-    })
+    setPrice(priceFromJSON(priceJSON, quantity))
   }, [priceJSON, quantity])
 
-  return (
+    return (
     <div className={classes.actions}>
-      {typeof price?.actualPrice !== 'undefined' && price?.withQuantity !== '' && (
+      {typeof price?.originalPrice !== 'undefined' && price?.modifiedPrice !== '' && (
         <div className={classes.price}>
-          <p>{price?.withQuantity}</p>
+          <p className={classes.modifiedPrice}>{price?.modifiedPrice}</p>
+          <p>{price?.originalPrice}</p>
         </div>
       )}
     </div>
-  )
+  );
 }
