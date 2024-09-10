@@ -6,7 +6,11 @@ import { Product } from '../../../payload/payload-types'
 
 import classes from './index.module.scss'
 
-export const priceFromJSON = (priceJSON: string, quantity: number = 1, raw?: boolean): { originalPrice: string, modifiedPrice: string } => {
+export const priceFromJSON = (
+  priceJSON: string,
+  quantity: number = 1,
+  raw?: boolean,
+): { originalPrice: string; modifiedPrice: string } => {
   let originalPrice = ''
   let modifiedPrice = ''
 
@@ -16,7 +20,11 @@ export const priceFromJSON = (priceJSON: string, quantity: number = 1, raw?: boo
       const priceValue = parsed.unit_amount * quantity
       const priceType = parsed.type
 
-      if (raw) return { originalPrice: priceValue.toString(), modifiedPrice: (priceValue + 100).toString() }
+      if (raw)
+        return {
+          originalPrice: priceValue.toString(),
+          modifiedPrice: (priceValue + 100).toString(),
+        }
 
       originalPrice = (priceValue / 100).toLocaleString('en-US', {
         style: 'currency',
@@ -65,7 +73,7 @@ export const Price: React.FC<{
     setPrice(priceFromJSON(priceJSON, quantity))
   }, [priceJSON, quantity])
 
-    return (
+  return (
     <div className={classes.actions}>
       {typeof price?.originalPrice !== 'undefined' && price?.modifiedPrice !== '' && (
         <div className={classes.price}>
@@ -74,5 +82,5 @@ export const Price: React.FC<{
         </div>
       )}
     </div>
-  );
+  )
 }
