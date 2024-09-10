@@ -95,12 +95,12 @@ export default async function Order({ params: { id } }) {
             currency: 'inr',
           }).format((order.total * (100 - order.discount)) / 10000)}
         </p>
-        {order.stripePaymentIntentID === 'PAID' ||
-        order.stripePaymentIntentID === 'Cash On Delivery' ? (
+        <p>
+          {'If your order status is not correct, try: '}
           <Link href={`/order-confirmation?order_id=${order.id}`} className={classes.reconfirmLink}>
             Reconfirm Order
           </Link>
-        ) : null}
+        </p>
       </div>
 
       <div className={classes.order}>
@@ -184,6 +184,8 @@ export default async function Order({ params: { id } }) {
               </Link>
             </div>
           )}
+
+          <p className={classes.deliveryStatus}>{'Your order will be delivered in 7 days'}</p>
 
           {/* Conditionally render the refund status or the form */}
           <div className={classes.refundSection}>

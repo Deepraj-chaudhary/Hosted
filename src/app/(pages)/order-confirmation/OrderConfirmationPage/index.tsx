@@ -97,7 +97,7 @@ export const OrderConfirmationPage: React.FC<{}> = () => {
     async (orderData: Order, discountPercentage: number, order_status: string) => {
       try {
         const user = await fetchUserDetails()
-        const reference_number = await createDTDCOrder(orderData, user)
+        const reference_number = null
 
         await updateOrderStatus(orderID!, discountPercentage, reference_number, order_status)
         clearCart()
