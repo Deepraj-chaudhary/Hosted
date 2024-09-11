@@ -21,7 +21,6 @@
   gap: 12px;
   font-size: 18px;
 
-
   > * {
     margin: 0;
   }
@@ -30,6 +29,11 @@
     grid-template-columns: 1fr;
     font-size: 16px;
   }
+}
+
+.modifiedPrice {
+  color: grey;
+  text-decoration: line-through;
 }
 
 .priceBreakdown {

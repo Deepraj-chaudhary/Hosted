@@ -5,7 +5,7 @@ import React, { Fragment, useState } from 'react'
 import { Category, Media as MediaType, Product } from '../../../payload/payload-types'
 import { AddToCartButton } from '../../_components/AddToCartButton'
 import { Gutter } from '../../_components/Gutter'
-import { Price } from '../../_components/Price'
+import { Price } from '../../_components/PriceDiscount'
 import Swiper from '../../_components/Swiper'
 
 import classes from './index.module.scss'

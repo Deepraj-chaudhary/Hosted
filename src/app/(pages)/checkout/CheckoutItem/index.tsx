@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 import { Media } from '../../../_components/Media'
-import { Price } from '../../../_components/Price'
+import { Price } from '../../../_components/PriceDiscount'
 
 import classes from './index.module.scss'
 

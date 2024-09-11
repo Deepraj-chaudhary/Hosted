@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 import { Product } from '../../../payload/payload-types'
 import { Media } from '../Media'
-import { Price } from '../Price'
+import { Price } from '../PriceDiscount'
 
 import classes from './index.module.scss'
 
