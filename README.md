@@ -1,3 +1,8 @@
+# User Site Pictures
+![alt text](<Screenshot from 2025-01-17 01-52-04.png>) ![alt text](<Screenshot from 2025-01-17 01-52-20.png>) ![alt text](<Screenshot from 2025-01-17 01-52-32.png>) ![alt text](<Screenshot from 2025-01-17 01-52-43.png>) ![alt text](<Screenshot from 2025-01-17 01-53-24.png>) 
+# Admin Panel Pictures
+![alt text](<Screenshot from 2025-01-17 01-54-40.png>) ![alt text](<Screenshot from 2025-01-17 01-59-37.png>)
+
 # Payload E-Commerce Template
 
 This is the official [Payload E-Commerce Template](https://github.com/payloadcms/payload/blob/main/templates/ecommerce). Use it to power e-commerce businesses and online stores of all sizes. This repo includes a fully-working backend, enterprise-grade admin panel, and a beautifully designed, production-ready website.
